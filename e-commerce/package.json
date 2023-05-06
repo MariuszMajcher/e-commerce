@@ -10,8 +10,18 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^1.9.5",
+    "bcrypt": "^5.1.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "node-postgres": "^0.6.2",
+    "passport": "^0.6.0",
+    "pg": "^8.10.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.11.1"
   },
   "devDependencies": {
     "@types/react": "^18.0.28",

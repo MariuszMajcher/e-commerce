@@ -18,6 +18,7 @@ const NewUser = () => {
   const [invalidLength, setInvalidLength] = useState(false)
   const [invalidCharacter, setInvalidCharacter] = useState(false)
   const [validPassword, setValidPassword] = useState(false)
+  const [validEmail, setValidEmail] = useState(false)
 
   const handleChange = (e) => {
     e.preventDefault()
@@ -27,8 +28,9 @@ const NewUser = () => {
     const specialCharacterCheck = /[!@]/;
     const invalidCharacterCheck = /[^A-Za-z0-9!@]/;
     const invalidLengthCheck = /[A-Za-z0-9!@]{8,}/;
-
+    const emailCheck = /[^@]+@[^\.]+\..+/;
     
+
     const setters = {
         email: setEmail,
         password: setPassword,
@@ -49,16 +51,40 @@ const NewUser = () => {
         invalidLengthCheck.test(e.target.value) ? setInvalidLength(true) : setInvalidLength(false)
       
     } 
-    console.log(password === passwordConfirmation)
-    if (password === passwordConfirmation) {
+    if(e.target.name === 'email') {
+        emailCheck.test(e.target.value) ? setValidEmail(true) : setValidEmail(false)
+    }
+
+    console.log(password == passwordConfirmation)
+    if (password == passwordConfirmation) {
         setValidPassword(true)
     } else {
         setValidPassword(false)
     }   
-
-
-
     }
+
+    const handleSubmit = (e) => {
+       e.preventDefault()
+        fetch('http://localhost:3000/new-user', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: email,
+                    password: password,
+                    firstName: firstName,
+                    lastName: lastName,
+                    favoriteBreed: favoriteBreed,
+                    address: address
+                    })
+                })
+                .then(res => res.json())  
+                .then(data => console.log(data))
+                .catch(err => console.log(err))
+    }
+
+
 
   return (
     <div className="new-user">
@@ -69,7 +95,8 @@ const NewUser = () => {
         {!number && <p className="invalid">Password must contain a number</p>}
         {!specialCharacter && <p className="invalid">Password must contain a special character</p>}
         {invalidCharacter && <p className="invalid">Password contains invalid characters</p> }
-        {!validPassword && <p className="invalid">Passwords do not match</p>}
+        {validPassword && <p className="invalid">Passwords do not match</p>}
+        {!validEmail && <p className="invalid">Invalid email address</p>}
         </div>
         <form>
             <h2>Sign up please</h2>
@@ -81,7 +108,7 @@ const NewUser = () => {
             <input value={passwordConfirmation} onChange={handleChange} type="password" name="passwordConfirmation" placeholder="Confirm your password" required/>
             <input value={address} onChange={handleChange} type="text" name="address" placeholder="Your address" required/>
 
-            <button>Submit</button>
+            <button onClick={handleSubmit}>Submit</button>
         </form>
     </div>
   )

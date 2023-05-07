@@ -1,25 +1,35 @@
 import { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { loggedIn, loadUser } from '../store/userSlice'
+import { redirect } from 'react-router-dom'
 
 const Login = () => {
 
+  const dispatch = useDispatch()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    
-    fetch(`http://localhost:3000/login?email=${email}&password=${password}`, {
-        method: 'GET',
+    fetch(`http://localhost:3000/login`, {
+        method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
-        }
+        },
+        body: JSON.stringify( {
+            username: email,
+            password: password
+        })
     })
     .then(res => res.json())
     .then(data => {
         console.log(data)
-    }
-    )
+        dispatch(loggedIn())
+        dispatch(loadUser(data))
+        return redirect('/profile')
+    })
+    .catch(err => console.log(err))
 }
 
   const handleChange = (e) => {
@@ -33,7 +43,7 @@ const Login = () => {
 
   return (
     <div>
-        <form>
+        <form onSubmit={handleSubmit}>
             <h2>Log in please</h2>
             <input 
             onChange={handleChange} 
@@ -47,7 +57,7 @@ const Login = () => {
             type="password" 
             value={password}
             placeholder="Your password" />
-            <button onClick={handleSubmit}>Submit</button>
+            <button type="submit">Submit</button>
         </form>
     </div>
   )

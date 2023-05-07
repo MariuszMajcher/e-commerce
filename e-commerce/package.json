@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint src --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "serve": "nodemon ./src/service/index.js"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.5",
@@ -18,9 +19,11 @@
     "express-session": "^1.17.3",
     "node-postgres": "^0.6.2",
     "passport": "^0.6.0",
+    "passport-local": "^1.0.0",
     "pg": "^8.10.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-redux": "^8.0.5",
     "react-router-dom": "^6.11.1"
   },
   "devDependencies": {
@@ -31,6 +34,7 @@
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.3.4",
+    "nodemon": "^2.0.22",
     "vite": "^4.3.2"
   }
 }

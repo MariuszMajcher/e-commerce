@@ -1,29 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-const loadState = () => {
-    try {
-        const serializedState = localStorage.getItem('user')
-        if (serializedState === null) {
-            return undefined
-        }
-        return JSON.parse(serializedState)
-    } catch (err) {
-        console.log(err)
-        return undefined
-    }
-}
-
-const saveState = (state) => {
-    try {
-        const serializedState = JSON.stringify(state)
-        localStorage.setItem('user', serializedState)
-    } catch (err) {
-        console.log(err)
-    }
-}
 
 
-const initialState = loadState() || {
+const initialState =  {
     user: {},
     loggedIn: false
 }
@@ -41,9 +20,6 @@ const userSlice = createSlice({
     }
     })
 
-userSlice.subscribe(() => {
-    saveState(userSlice.getState())
-})
 
 
 

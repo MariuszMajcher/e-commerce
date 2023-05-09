@@ -1,11 +1,14 @@
 import { useState } from 'react'
-import { useDispatch } from 'react-redux'
-import { loggedIn, loadUser } from '../store/userSlice'
-import { redirect } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { logIn, loadUser } from '../store/userSlice'
+import {  selectLoggedIn} from '../store/userSlice'
+import { useNavigate } from 'react-router-dom'
 
 const Login = () => {
 
   const dispatch = useDispatch()
+  const logged = useSelector(selectLoggedIn)
+  const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
@@ -25,9 +28,11 @@ const Login = () => {
     .then(res => res.json())
     .then(data => {
         console.log(data)
-        dispatch(loggedIn())
-        dispatch(loadUser(data))
-        return redirect('/profile')
+        dispatch(logIn())
+        if (logged) {
+            dispatch(loadUser(data))
+            navigate('/profile')
+        }   
     })
     .catch(err => console.log(err))
 }

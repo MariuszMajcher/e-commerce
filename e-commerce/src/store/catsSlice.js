@@ -1,18 +1,21 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-const initialState = {
-    cats: {}
-}
+const initialState = []
+
 
 const catsSlice = createSlice({
     name: 'cats',
     initialState,
     reducers: {
-        loadAllCats(state, action) {
-            state.cats = action.payload
+        clearCats(state, action) {
+            state = []
+        },
+        loadCat(state, action) {
+          state = action.payload
         }
     }
     })
 
-export const { loadAllCats } = catsSlice.actions
+export const selectAllCats = state => state
+export const { clearCats, loadCat } = catsSlice.actions
 export default catsSlice.reducer

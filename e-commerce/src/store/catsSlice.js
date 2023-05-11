@@ -8,14 +8,14 @@ const catsSlice = createSlice({
     initialState,
     reducers: {
         clearCats(state, action) {
-            state = []
+            return []
         },
-        loadCat(state, action) {
-          state = action.payload
+        loadCats(state, action) {
+          return state.concat(action.payload)
         }
     }
     })
 
 export const selectAllCats = state => state
-export const { clearCats, loadCat } = catsSlice.actions
+export const { clearCats, loadCats } = catsSlice.actions
 export default catsSlice.reducer

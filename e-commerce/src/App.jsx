@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route, Link} from 'react-router-dom'
 import './App.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { logOut } from './store/userSlice'
-import { loadCat, clearCats } from "./store/catsSlice"
+import { loadCats, clearCats } from "./store/catsSlice"
 import { useEffect } from "react"
 import { selectLoggedIn } from './store/userSlice'
 
@@ -22,16 +22,19 @@ function App() {
       .then(res => res.json())
       .then(data => {
         let catsArray = []
-        localStorage.clear()
         dispatch(clearCats())
+        console.log('cleared cats')
         for(let cat of data) {
              catsArray.push(cat)
         }
-        dispatch(loadAllCats(catsArray))
+        console.log('cats loaded')
+        dispatch(loadCats(catsArray))
       }
       )
   }
-// will run it only after succesfull login, ONCE no more cats!!
+useEffect(() => {
+  loadAllCats()
+}, [])
   
 
   return (
@@ -48,7 +51,7 @@ function App() {
         <Route path='/profile' element={<Profile />} />
       </Routes>
 
-      <button onClick={() => dispatch(logOut())}>Log out</button>
+      <button onClick={() => loadAllCats()}>Log out</button>
     </BrowserRouter>
   )
 }

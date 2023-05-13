@@ -24,15 +24,14 @@ function App() {
       .then(data => {
         let catsArray = []
         dispatch(clearCats())
-        console.log('cleared cats')
         for(let cat of data) {
              catsArray.push(cat)
         }
-        console.log('cats loaded')
         dispatch(loadCats(catsArray))
       }
       )
   }
+
 useEffect(() => {
   loadAllCats()
 }, [])
@@ -53,7 +52,7 @@ useEffect(() => {
         <Route path='/profile' element={<Profile />} />
       </Routes>
 
-      <button onClick={() => loadAllCats()}>Log out</button>
+      <button onClick={() => dispatch(logOut())}>Log out</button>
     </BrowserRouter>
   )
 }

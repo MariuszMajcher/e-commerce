@@ -18,6 +18,7 @@ const userSlice = createSlice({
             state.loggedIn = true
         },
         logOut(state, action) {
+            console.log('logging out')
             state.user = {}
             state.loggedIn = false
         }

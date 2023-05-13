@@ -1,10 +1,11 @@
 import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
 import catsReducer from "./catsSlice";
 import userReducer from "./userSlice";
+import { useDispatch } from "react-redux";
+import { logOut } from "./userSlice";
 
 const localStorageMiddleware = store => next => action => {
     const result = next(action);
-    // if (action.type === 'loadCats')
     localStorage.clear()
     localStorage.setItem('reduxState', JSON.stringify(store.getState()));
     return result;

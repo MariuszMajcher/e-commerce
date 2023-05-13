@@ -145,11 +145,22 @@ app.post('/login', passport.authenticate('local', {
     (req, res) => {
         res.send(req.user);
     }
-    );
+);
 
-app.get('/new-user', (req, res) => {
-    res.json('new user');
-});
+const isAuthenticated = (req, res, next) => {
+    if (req.session.user) {
+        next();
+    } else {
+        res.status(401).json({ message: 'unauthorized' });
+    }
+};
+
+
+app.get('/new-user', isAuthenticated, (req, res) => {
+    console.log("a");
+    res.send(req.user);
+}
+);
 
 
 passport.serializeUser((user, done) => done(null, user));
@@ -182,9 +193,19 @@ app.post('/new-user', (req, res) => {
     });
 });
 
+app.use('/sell-cat', (req, res, next) => {
+    if (req.user) {
+        return next();
+    } else {
+        console.log(req.user)
+        console.log('You must be logged in to sell a cat');
+    res.status(401).json({message: 'You must be logged in to sell a cat'});}
+});
+
 app.post('/sell-cat', (req, res) => {
-    const { name, breed, age, price, image } = req.body;
-    pool.query('INSERT INTO cats_for_sale (name, breed_id, age,  price, image) VALUES ($1, $2, $3, $4, $5, $6)', [name, breed, age, price, image], (err, result) => {
+    console.log('sell cat')
+    const { price, gender, age, breedId, imagesPath, name } = req.body;
+    pool.query('INSERT INTO cats_for_sale ( price, gender, age, breed_id, images_path, name) VALUES ($1, $2, $3, $4, $5, $6)', [ price, gender, age, breedId, imagesPath, name], (err, result) => {
         if (err) {
             return res.status(500).json({ message: err });
         }

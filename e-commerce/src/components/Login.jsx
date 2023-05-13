@@ -15,27 +15,30 @@ const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault()
     fetch(`http://localhost:3000/login`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-        },
-        body: JSON.stringify( {
-            username: email,
-            password: password
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify( {
+                username: email,
+                password: password
+            })
         })
-    })
-    .then(res => res.json())
-    .then(data => {
-        console.log(data)
+        .then(res => res.json())
+        .then(data => { 
+        if(data.message == 'unauthorized') {
+            navigate('/new-user')
+            return false
+        }
         dispatch(logIn())
         if (logged) {
             dispatch(loadUser(data))
             navigate('/profile')
         }   
-    })
+        })
     .catch(err => console.log(err))
-}
+    }
 
   const handleChange = (e) => {
     e.preventDefault()

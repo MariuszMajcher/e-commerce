@@ -32,10 +32,9 @@ const Login = () => {
             return false
         }
         dispatch(logIn())
-        if (logged) {
-            dispatch(loadUser(data))
-            navigate('/profile')
-        }   
+        dispatch(loadUser(data))
+        navigate('/sell-cat')
+           
         })
     .catch(err => console.log(err))
     }
@@ -72,3 +71,6 @@ const Login = () => {
 }
 
 export default Login
+
+// IMPORTANT:
+/*NEED TO MAKE SURE THAT AFTER LOGIN ALL APART OF PASSWORD IS BEING STORED IN LS */

@@ -22,7 +22,6 @@ const userSlice = createSlice({
             state.user = {}
             state.loggedIn = false
         }
-
     }
     })
 

@@ -11,6 +11,7 @@ import Login from './components/Login'
 import CatShop from './components/CatShop'
 import Profile from './components/Profile'
 import CatBreeds from './components/CatBreeds'
+import NewCatForSale from './components/NewCatForSale'
 
 function App() {
   const dispatch = useDispatch()
@@ -48,6 +49,7 @@ useEffect(() => {
         <Route path='/new-user' element={<NewUser />} />
         <Route path='/login' element={<Login />} />
         <Route path='/cat-shop' element={<CatShop />} />
+        <Route path='/sell-cat' element={<NewCatForSale />} />
         <Route path='/profile' element={<Profile />} />
       </Routes>
 

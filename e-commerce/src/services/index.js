@@ -182,6 +182,17 @@ app.post('/new-user', (req, res) => {
     });
 });
 
+app.post('/sell-cat', (req, res) => {
+    const { name, breed, age, price, image } = req.body;
+    pool.query('INSERT INTO cats_for_sale (name, breed_id, age,  price, image) VALUES ($1, $2, $3, $4, $5, $6)', [name, breed, age, price, image], (err, result) => {
+        if (err) {
+            return res.status(500).json({ message: err });
+        }
+        return res.status(201).json({ message: 'Cat added successfully' });
+    });
+});
+
+
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`);
     }

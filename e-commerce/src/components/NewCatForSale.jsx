@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux'
 import { selectAllCats } from '../store/catsSlice'
 import { useNavigate } from 'react-router-dom'
 import { selectLoggedIn, selectUser } from '../store/userSlice'
+import '../styling/NewCatForSale.css'
 
 
 
@@ -15,6 +16,8 @@ const NewCatForSale = () => {
   const [gender, setGender] = useState('')
   const [imagesPath, setImagesPath] = useState('')
   const [price, setPrice] = useState(0)
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
   
   
   const navigate = useNavigate()
@@ -37,15 +40,37 @@ const NewCatForSale = () => {
       return <option key={index} value={cat}>{cat}</option>
   })
 
+  const handleFileInputChange = (event) => {
+    const file = event.target.files[0];
 
+    // Use FileReader API to convert the selected file to a data URL
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      setImageFile(file);
+      setImagePreview(e.target.result);
+    };
+    reader.readAsDataURL(file);
+  };
 
     const onSubmit = (e) => {
       e.preventDefault()
+
       // if user is not logged in, redirect to login page
       if(!loggedIn) {
         navigate('/login')
         return false
       }
+      // Get the current date in the format "YYYY-MM-DD"
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = now.getMonth() + 1;
+      const day = now.getDate();
+      const date = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+
+      // Create a new FormData object for the image
+      const formData = new FormData();
+      formData.append('imageFile', imageFile);
+
       // if user is logged in, send the data to the server
       fetch('http://localhost:3000/sell-cat', {
           method: 'POST',
@@ -53,7 +78,7 @@ const NewCatForSale = () => {
               'Content-type': 'application/json'
           },
           body: 
-              JSON.stringify({userId, price, gender, age, breedId, imagesPath, name})
+              JSON.stringify({userId, price, gender, age, date, breedId, formData, name})
           
       })
       .then(res => res.json())
@@ -116,6 +141,11 @@ const NewCatForSale = () => {
             <input type="radio" name="gender" id="female" value="female"  onClick={() => setGender("female")} required />
           Female</label>
           </div>
+          {/* experimenting with the importing images */}
+          <div className="image-prev">
+            {imagePreview && <img src={imagePreview} alt="Selected Image Preview" />}
+          </div>
+          <input type="file" accept="image/*" onChange={handleFileInputChange} />
           <button type="submit"> Sell Cat! </button>
       </form>
     </div>

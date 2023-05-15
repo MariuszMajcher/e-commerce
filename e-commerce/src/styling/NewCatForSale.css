@@ -1,0 +1,9 @@
+.image-prev {
+    width: 200px;
+    height: auto;
+}
+
+.image-prev img {
+    width: 100%;
+    height: auto;
+}

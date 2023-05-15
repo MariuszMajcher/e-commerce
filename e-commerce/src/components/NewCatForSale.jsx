@@ -72,6 +72,8 @@ const NewCatForSale = () => {
       formData.append('imageFile', imageFile);
 
       // if user is logged in, send the data to the server
+
+      // 15.05.2023 WILL TRY TO USE THE formData to send all the data but first will do a commit
       fetch('http://localhost:3000/sell-cat', {
           method: 'POST',
           headers: {
@@ -121,8 +123,6 @@ const NewCatForSale = () => {
   }
 
 
-// date of cat being put on sale can be done on the server side
-/*DATE STILL NOT DONE 13/05/2023 */
   return (
     <div>
         <form onSubmit={onSubmit}>
@@ -145,7 +145,7 @@ const NewCatForSale = () => {
           <div className="image-prev">
             {imagePreview && <img src={imagePreview} alt="Selected Image Preview" />}
           </div>
-          <input type="file" accept="image/*" onChange={handleFileInputChange} />
+          <input type="file" accept="image/*" onChange={handleFileInputChange} /> 
           <button type="submit"> Sell Cat! </button>
       </form>
     </div>

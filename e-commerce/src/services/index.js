@@ -69,19 +69,27 @@ app.use(passport.session());
 
 passport.use('local', new LocalStrategy(
     (username, password, done) => {
-        
         pool.query('SELECT * FROM users WHERE email = $1', [username], (err, result) => {
+            
             if (err) {
                 return done(err);
             }
             if (!result.rows.length) {
                 return done(null, false);
             }
-           
+            const user = result.rows[0]
+            bcrypt.compare(password, user.password, (compareErr, isMatch) => {
+                if (compareErr) {
+                    return done(compareErr);
+                }
+                if (!isMatch) {
+                    return done(null, false);
+                }
+                return done(null, user);
             
-            
-        });
+            });
         
+        })
     }
 ));
 
@@ -100,7 +108,15 @@ passport.deserializeUser((id, done) => {
       req.user = result.rows[0];
       return done(null, result.rows[0]);
     });
-  });
+});
+
+app.post('/login', passport.authenticate('local', {
+failureRedirect: '/new-user'
+}),
+(req, res) => {
+    res.send(req.user);
+}
+);
 
   app.get('/cats', (req, res) => {
     pool.query('SELECT * FROM cat_breeds ORDER BY name ASC', (err, result) => {
@@ -128,17 +144,6 @@ app.get('/new-user', isAuth, (req, res) => {
 }
 );
 
-
-app.post('/login', passport.authenticate('local', {
-    failureRedirect: '/new-user'
-    }),
-    (req, res) => {
-        res.send(req.user);
-    }
-);
-
-// there is a fault, IT DOES NOT REDIRECT TO THE NEW USER PAGE, IT REDIRECTS ON THE SERVER SIDE AND RUNS AS CREATING NEW USER
-
 app.post('/new-user', (req, res) => {
     const { email, password, address, firstName, lastName, favouriteBreed } = req.body;
     bcrypt.hash(password, 10, (err, hash) => {
@@ -154,7 +159,7 @@ app.post('/new-user', (req, res) => {
     });
 });
 
-app.use('/sell-cat', upload.single('imageFile'), (req, res, next) => {
+app.use('/sell-cat', (req, res, next) => {
     if (req.session.user || req.isAuthenticated) {
         next();
     } else {
@@ -162,9 +167,11 @@ app.use('/sell-cat', upload.single('imageFile'), (req, res, next) => {
     res.status(401).json({message: 'You must be logged in to sell a cat'});}
 });
 
-app.post('/sell-cat', (req, res) => {
-    const { userId, price, gender, age, date, breedId, formData, name } = req.body;
-    pool.query('INSERT INTO cats_for_sale ( user_id, price, gender, age, date_for_sale, breed_id, images_path, name) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)', [ userId, price, gender, age, date, breedId, formData, name], (err, result) => {
+app.post('/sell-cat', upload.single('imageFile'), (req, res) => {
+    const { userId, price, gender, age, date, breedId, name } = req.body;
+    console.log(req.file)
+    const imagePath = "req.file.path"
+    pool.query('INSERT INTO cats_for_sale ( user_id, price, gender, age, date_for_sale, breed_id, images_path, name) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)', [ userId, price, gender, age, date, breedId, imagePath, name], (err, result) => {
         if (err) {
             return res.status(500).json({ message: err });
         }

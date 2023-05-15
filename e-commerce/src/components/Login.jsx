@@ -31,12 +31,10 @@ const Login = () => {
         if(data.message == 'unauthorized') {
             navigate('/new-user')
             return false
-        } else {
-          console.log('login')
+        } 
         dispatch(logIn())
         dispatch(loadUser(data))
         navigate('/sell-cat')
-           }
         })
     .catch(err => console.log(err))
     }

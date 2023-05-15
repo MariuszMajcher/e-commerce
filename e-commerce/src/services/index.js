@@ -40,7 +40,7 @@ const storage = multer.diskStorage({
 });
 
 // Create a multer instance with the storage engine
-const upload = multer({ storage: storage, limits: { fileSize: 10 * 1024 * 1024 } });
+const upload = multer({ storage: storage, limits: { fileSize: 10 * 1024 * 1024 * 10} });
 
 
 // need to FIGURE OUT HOW TO UPLOAD FILES TO SAME DATABESE AS THE REST OF THE INFO 
@@ -170,7 +170,7 @@ app.use('/sell-cat', (req, res, next) => {
 app.post('/sell-cat', upload.single('imageFile'), (req, res) => {
     const { userId, price, gender, age, date, breedId, name } = req.body;
     console.log(req.file)
-    const imagePath = "req.file.path"
+    const imagePath = req.file.path
     pool.query('INSERT INTO cats_for_sale ( user_id, price, gender, age, date_for_sale, breed_id, images_path, name) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)', [ userId, price, gender, age, date, breedId, imagePath, name], (err, result) => {
         if (err) {
             return res.status(500).json({ message: err });

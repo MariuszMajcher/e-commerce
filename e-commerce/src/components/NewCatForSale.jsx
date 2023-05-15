@@ -14,7 +14,6 @@ const NewCatForSale = () => {
   // state of breed is used to set the value of the dropdown only! Not nescessary for post request
   const [breed, setBreed] = useState('')
   const [gender, setGender] = useState('')
-  const [imagesPath, setImagesPath] = useState('')
   const [price, setPrice] = useState(0)
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
@@ -70,18 +69,20 @@ const NewCatForSale = () => {
       // Create a new FormData object for the image
       const formData = new FormData();
       formData.append('imageFile', imageFile);
+      formData.append('userId', userId);
+      formData.append('price', price);
+      formData.append('gender', gender);
+      formData.append('age', age);
+      formData.append('breedId', breedId);
+      formData.append('name', name);
+      
+      // ALSO NEED TO FIGURE OUT THE WAY TO MAKE THE FIRST CAT CHOOSABLE MAYBE THE FIRST OPTION TO BE JUST select a cat THAT WILL BE AN OPTION
+      // BUT WILL NOT ACTIVATE THE SUBMIT BUTTON, WILL TRY TO MAKE IT SO THE BUTTON BECOMES ACTIVE WHEN CERTAIN CONDITIONS ARE MET
 
       // if user is logged in, send the data to the server
-
-      // 15.05.2023 WILL TRY TO USE THE formData to send all the data but first will do a commit
       fetch('http://localhost:3000/sell-cat', {
           method: 'POST',
-          headers: {
-              'Content-type': 'application/json'
-          },
-          body: 
-              JSON.stringify({userId, price, gender, age, date, breedId, formData, name})
-          
+          body: formData
       })
       .then(res => res.json())
       .then(data => 
@@ -104,7 +105,6 @@ const NewCatForSale = () => {
     const setters = {
         name: setName,
         age: setAge,
-        imagesPath: setImagesPath,
         breed: setBreed,
         price: setPrice
     }
@@ -128,7 +128,6 @@ const NewCatForSale = () => {
         <form onSubmit={onSubmit}>
           <input type="text" name="name" value={name} placeholder="Cats name" onChange={handleChange} required/>
           <input type="number" name="age" value={age} placeholder="Age of your cat" onChange={handleChange} required/>
-          <input type="text" value={imagesPath} name="imagesPath" placeholder="Path to your cat's image" onChange={handleChange} required/>
           <input type="number" name="price" value={price} placeholder="Price" onChange={handleChange} required/>
           <select name="breedId" value={breed} onChange={handleChange} required>
               {options}

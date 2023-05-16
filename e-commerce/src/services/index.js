@@ -179,6 +179,15 @@ app.post('/sell-cat', upload.single('imageFile'), (req, res) => {
     });
 });
 
+app.get('/cats-shop', (req, res) => {
+    pool.query('SELECT * FROM cats_for_sale  WHERE sold_date IS NULL ORDER BY date_for_sale DESC', (err, result) => {
+        if (err) {
+            return res.status(500).json({ message: err });
+        }
+        return res.status(200).json(result.rows);
+    });
+});
+
 
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`);

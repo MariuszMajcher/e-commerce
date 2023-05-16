@@ -5,5 +5,13 @@
   text-align: center;
 }
 
+nav {
+  margin-bottom: 2rem;
+}
 
+nav > a {
+  margin: 0 1rem;
+  color: #0e046b;
+  text-decoration: none;
+}
 

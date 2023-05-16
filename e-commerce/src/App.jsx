@@ -42,12 +42,13 @@ useEffect(() => {
     <nav>
       <Link to='/new-user'>New User</Link>
       <Link to='/login'>Login</Link>
+      <Link to='/cats-shop'>Cats Shop</Link>
     </nav>
       <Routes>
         <Route path='/cat-breeds' element={<CatBreeds />} />
         <Route path='/new-user' element={<NewUser />} />
         <Route path='/login' element={<Login />} />
-        <Route path='/cat-shop' element={<CatShop />} />
+        <Route path='/cats-shop' element={<CatShop />} />
         <Route path='/sell-cat' element={<NewCatForSale />} />
         <Route path='/profile' element={<Profile />} />
       </Routes>

@@ -43,6 +43,7 @@ useEffect(() => {
       <Link to='/new-user'>New User</Link>
       <Link to='/login'>Login</Link>
       <Link to='/cats-shop'>Cats Shop</Link>
+      <Link to='/sell-cat'>Sell Cat</Link>
     </nav>
       <Routes>
         <Route path='/cat-breeds' element={<CatBreeds />} />

@@ -9,7 +9,7 @@ import '../styling/NewCatForSale.css'
 
 const NewCatForSale = () => {
   const [name, setName] = useState('')
-  const [age, setAge] = useState(0)
+  const [DoB, setDoB] = useState('')
   const [breedId, setBreedId] = useState(0)
   // state of breed is used to set the value of the dropdown only! Not nescessary for post request
   const [breed, setBreed] = useState('')
@@ -72,9 +72,11 @@ const NewCatForSale = () => {
       formData.append('userId', userId);
       formData.append('price', price);
       formData.append('gender', gender);
-      formData.append('age', age);
+      formData.append('DoB', DoB);
+      formData.append('date', date);
       formData.append('breedId', breedId);
       formData.append('name', name);
+      console.log(date, DoB)
       
       // ALSO NEED TO FIGURE OUT THE WAY TO MAKE THE FIRST CAT CHOOSABLE MAYBE THE FIRST OPTION TO BE JUST select a cat THAT WILL BE AN OPTION
       // BUT WILL NOT ACTIVATE THE SUBMIT BUTTON, WILL TRY TO MAKE IT SO THE BUTTON BECOMES ACTIVE WHEN CERTAIN CONDITIONS ARE MET
@@ -104,20 +106,20 @@ const NewCatForSale = () => {
     // all the setters that will be used in the handleChange function
     const setters = {
         name: setName,
-        age: setAge,
+        DoB: setDoB,
         breed: setBreed,
-        price: setPrice
+        price: setPrice,
+        gender: setGender,
+
     }
-    console.log(breedId)
     // if the target is the dropdown, find the cat object in the array of cats and set the breedId to the id of the cat
     if(e.target.name === 'breedId') {
       const bID = cats.find(cat => cat.name === e.target.value).id
       // set the breed to the value of the dropdown
       setBreed(e.target.value)
       // set the breedId to the id of the cat
-      setBreedId(bID, console.log(breedId))
-      
-    } else {
+      setBreedId(bID)
+    } else  {
      setters[e.target.name](e.target.value)
     }
   }
@@ -127,8 +129,10 @@ const NewCatForSale = () => {
     <div>
         <form onSubmit={onSubmit}>
           <input type="text" name="name" value={name} placeholder="Cats name" onChange={handleChange} required/>
-          <input type="number" name="age" value={age} placeholder="Age of your cat" onChange={handleChange} required/>
-          <input type="number" name="price" value={price} placeholder="Price" onChange={handleChange} required/>
+          {/* AGE WILL BE SET BY CHECKING THE DOB */}
+          <input type="date"  name="DoB" value={DoB} placeholder="DoB of your cat" onChange={handleChange} required/>
+        {/* AFTER CHANGING THE AGE TO DATE THE REQUEST DOES NOT PASS */}
+          <input type="number" name="price"  value={price} placeholder="Price" onChange={handleChange} required/>
           <select name="breedId" value={breed} onChange={handleChange} required>
               {options}
           </select>

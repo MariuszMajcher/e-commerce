@@ -168,10 +168,16 @@ app.use('/sell-cat', (req, res, next) => {
 });
 
 app.post('/sell-cat', upload.single('imageFile'), (req, res) => {
-    const { userId, price, gender, age, date, breedId, name } = req.body;
+    const { userId, price, gender, DoB, date, breedId, name } = req.body;
     console.log(req.file)
     const imagePath = req.file.path
-    pool.query('INSERT INTO cats_for_sale ( user_id, price, gender, age, date_for_sale, breed_id, images_path, name) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)', [ userId, price, gender, age, date, breedId, imagePath, name], (err, result) => {
+
+    // Convert the date value to the desired format (YYYY-MM-DD)
+    const DoBConverted = DoB.split('-').reverse().join('-');
+    const dobDate = new Date(DoBConverted);
+         
+    console.log(dobDate)
+    pool.query('INSERT INTO cats_for_sale ( user_id, price, gender, date_of_birth, date_for_sale, breed_id, images_path, name) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)', [ userId, price, gender, DoB, date, breedId, imagePath, name], (err, result) => {
         if (err) {
             return res.status(500).json({ message: err });
         }
@@ -187,6 +193,8 @@ app.get('/cats-shop', (req, res) => {
         return res.status(200).json(result.rows);
     });
 });
+
+
 
 
 app.listen(port, () => {

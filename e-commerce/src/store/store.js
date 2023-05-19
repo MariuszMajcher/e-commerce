@@ -1,8 +1,7 @@
 import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
 import catsReducer from "./catsSlice";
 import userReducer from "./userSlice";
-import { useDispatch } from "react-redux";
-import { logOut } from "./userSlice";
+import buyingCatSlice from "./buyingCatSlice";
 
 const localStorageMiddleware = store => next => action => {
     const result = next(action);
@@ -26,7 +25,8 @@ const localStorageMiddleware = store => next => action => {
 const store = configureStore({
     reducer: {
         cats: catsReducer,
-        user: userReducer
+        user: userReducer,
+        buy: buyingCatSlice
     }, preloadedState: getLocalStorageState(),
     middleware: getDefaultMiddleware => getDefaultMiddleware().concat(localStorageMiddleware)
 });

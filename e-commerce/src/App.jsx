@@ -53,7 +53,7 @@ useEffect(() => {
         <Route path='/cats-shop' element={<CatShop />} />
         <Route path='/sell-cat' element={<NewCatForSale />} />
         <Route path='/profile' element={<Profile />} />
-        <Route path='/buy-cat' element={<BuyCat />} />
+        <Route path='/cats-shop/:id' element={<BuyCat />} />
       </Routes>
 
       <button onClick={() => dispatch(logOut())}>Log out</button>

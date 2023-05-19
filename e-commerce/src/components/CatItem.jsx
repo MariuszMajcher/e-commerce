@@ -1,10 +1,16 @@
 import { useState, useEffect } from 'react';
-import '../styling/CatItem.css'
 import {Link } from 'react-router-dom'
+import { useDispatch } from 'react-redux';
+import { loadBuy } from '../store/buyingCatSlice';
+import '../styling/CatItem.css'
 
 const CatItem = (props) => {
 
   const { name, price, gender, date_of_birth, id, user_id, images_path, breed_id, date_for_sale } = props.cat
+
+  const  dispatch = useDispatch()
+
+
   let priceString 
   // find the breed object that matches the breed_id
   const breed = props.breeds.find(breed => breed.id === breed_id)
@@ -50,7 +56,7 @@ const CatItem = (props) => {
       {/* In order for the userID and the cat data to be passed to buy cat component, will need to create a slice
       this slice will be separate from the others, will update on each click of buy button and hold only 
       the data that are associated with that particular sale */}
-      <Link to={`/buy-cat`} > Buy Cat </Link>
+      <Link to={`/cats-shop/${id}`} onClick={() => dispatch(loadBuy(props.cat))}> Buy Cat </Link>
     </div>
   );
 };

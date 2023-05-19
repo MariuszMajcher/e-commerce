@@ -1,19 +1,16 @@
 import { useState, useEffect } from 'react'
-
 // will pass on the information about the cat and its owner, to be able to send a request to the owner
-const BuyCat = (props) => {
+import { useSelector } from 'react-redux'
+import { selectBuyingCat } from '../store/buyingCatSlice'
+import { selectUser } from '../store/userSlice'
+const BuyCat = () => {
 
-
-  const [ownerId, setOwnerId] = useState()
+  const buyingCat = useSelector(selectBuyingCat)
+  const user = useSelector(selectUser)
   const [message, setMessage] = useState('')
   const [price, setPrice] = useState(0)
 
-  // For security reasons will need to extract only the id of the owner from the cats for sale table  
-  useEffect(() => {
-    // get the owner of the cat
-
-    setOwnerId(props.ownerId)
-    }, [])
+  
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -24,11 +21,10 @@ const BuyCat = (props) => {
     setters[name](value)
   } 
 
-
   const handleSubmit = (e) => {
     e.preventDefault()
     // send a request to the owner
-    fetch('buy-cat', {
+    fetch(`http//localhost:3000/cats-shop/${buyingCat.id}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -38,7 +34,8 @@ const BuyCat = (props) => {
         body: JSON.stringify({
             message: message,
             price: price,
-            ownerId: ownerId
+            ownerId: buyingCat.user_id,
+            sender: user.id
             })
             })
             .then(response => response.json())
@@ -46,6 +43,8 @@ const BuyCat = (props) => {
                 console.log(data.message)
             })
   }
+  // after the seller accepts the sale the cat will be removed from the shop, the cat will remain in the database but will not
+  // be displayed in the shop, as the shop update will update only cats that are not sold
     
   return (
     <form onSubmit={handleSubmit}>
@@ -58,8 +57,6 @@ const BuyCat = (props) => {
 
 export default BuyCat
 
-// STILL NOT HAVING THE OWNER ID, NEED TO PASS IT DOWN FROM THE CAT SHOP
-// NOW WILL START WORKING ON THE OWNER SIDE, WILL NEED TO CREATE A PAGE FOR THE OWNER TO SEE THE REQUESTS
 // WILL NEED TO ADD A SERVER REQUEST TO GET THE REQUESTS FROM THE DATABASE
 // AND CHANGE THE TABLE OF OWENERS
 // WILL NEED TO ADD A COLUMN TO THE OWNER TABLE, CALLED MONEY, THIS WILL BE THE MONEY THE OWNER HAS MADE FROM SELLING CATS

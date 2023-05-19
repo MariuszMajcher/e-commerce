@@ -13,3 +13,5 @@ const Profile = () => {
 }
 
 export default Profile
+// profile will need to have a messages received and sent box, 
+// requests from the buyers will be sent to the seller assoctiated with the cat

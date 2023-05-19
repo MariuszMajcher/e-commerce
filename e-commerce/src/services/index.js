@@ -185,6 +185,8 @@ app.post('/sell-cat', upload.single('imageFile'), (req, res) => {
     });
 });
 
+
+
 app.get('/cats-shop', (req, res) => {
     pool.query('SELECT * FROM cats_for_sale  WHERE sold_date IS NULL ORDER BY date_for_sale DESC', (err, result) => {
         if (err) {
@@ -194,8 +196,17 @@ app.get('/cats-shop', (req, res) => {
     });
 });
 
-
-
+app.post('/cats-shop/:id', (req, res) => {
+    const { ownerId, message, price, sender } = req.body;
+    const catId = req.params.id;
+    const date = new Date();
+    pool.query('INSERT INTO messages (user_id, cat_id, message, asked_price, date_of_message, sender_id) VALUES ($1, $2, $3, $4, $5, $6)', [ownerId, catId, message, price, date, sender], (err, result) => {
+        if (err) {
+            return res.status(500).json({ message: err });
+        }
+        return res.status(201).json({ message: 'Message sent successfully' });
+    });
+});
 
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`);

@@ -2,6 +2,7 @@ import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
 import catsReducer from "./catsSlice";
 import userReducer from "./userSlice";
 import buyingCatSlice from "./buyingCatSlice";
+import messagesSlice from "./messagesSlice";
 
 const localStorageMiddleware = store => next => action => {
     const result = next(action);
@@ -26,7 +27,8 @@ const store = configureStore({
     reducer: {
         cats: catsReducer,
         user: userReducer,
-        buy: buyingCatSlice
+        buy: buyingCatSlice,
+        messages: messagesSlice
     }, preloadedState: getLocalStorageState(),
     middleware: getDefaultMiddleware => getDefaultMiddleware().concat(localStorageMiddleware)
 });

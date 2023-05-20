@@ -58,7 +58,7 @@ const pool = new Pool({
 
 app.use(cors({
     origin: '*',
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
@@ -110,13 +110,35 @@ passport.deserializeUser((id, done) => {
     });
 });
 
+// app.post('/login', passport.authenticate('local', {
+// failureRedirect: '/new-user'
+// }),
+// (req, res) => {
+//     res.send(req.user);
+// }
+// );
+
+
 app.post('/login', passport.authenticate('local', {
-failureRedirect: '/new-user'
+    failureRedirect: '/new-user'
 }),
 (req, res) => {
-    res.send(req.user);
-}
-);
+    // Fetch messages for the logged-in user from the "messages" table
+    const userId = req.user.id;
+    pool.query('SELECT * FROM messages WHERE user_id = $1', [userId], (err, result) => {
+        if (err) {
+            return res.status(500).json({ message: err });
+        }
+        // Exclude the password field from the response
+        const { password, ...userWithoutPassword } = req.user;
+        // Include the fetched messages in the response
+        const userWithMessages = {
+            ...userWithoutPassword,
+            messages: result.rows
+        };
+        res.send(userWithMessages);
+    });
+});
 
   app.get('/cats', (req, res) => {
     pool.query('SELECT * FROM cat_breeds ORDER BY name ASC', (err, result) => {
@@ -146,17 +168,31 @@ app.get('/new-user', isAuth, (req, res) => {
 
 app.post('/new-user', (req, res) => {
     const { email, password, address, firstName, lastName, favouriteBreed } = req.body;
-    bcrypt.hash(password, 10, (err, hash) => {
+    let emailSmall = email.toLowerCase();
+
+    pool.query('SELECT * FROM users WHERE email = $1', [emailSmall], (err, result) => {
         if (err) {
             return res.status(500).json({ message: err });
         }
-        pool.query('INSERT INTO users (email, password, address, first_name, last_name, favourite_breed) VALUES ($1, $2, $3, $4, $5, $6)', [email, hash, address, firstName, lastName, favouriteBreed], (err, result) => {  
+        if (result.rows.length) {
+            return res.status(409).json({ message: 'Email already exists' });
+        } else { bcrypt.hash(password, 10, (err, hash) => {
             if (err) {
                 return res.status(500).json({ message: err });
             }
-            return res.status(201).json({ message: 'User created successfully' });
+
+            pool.query(
+                'INSERT INTO users (email, password, address, first_name, last_name, favourite_breed) VALUES ($1, $2, $3, $4, $5, $6)',
+                [emailSmall, hash, address, firstName, lastName, favouriteBreed],
+                (err, result) => {
+                    if (err) {
+                        return res.status(500).json({ message: err });
+                    }
+                    return res.status(201).json({ message: 'User created successfully' });
+                }
+            );
         });
-    });
+    }});
 });
 
 app.use('/sell-cat', (req, res, next) => {
@@ -185,6 +221,25 @@ app.post('/sell-cat', upload.single('imageFile'), (req, res) => {
     });
 });
 
+app.patch('/messages/:id', (req, res) => {
+    const { id } = req.params;
+    pool.query('UPDATE messages SET message_read = TRUE WHERE id = $1', [ id], (err, result) => {
+        if (err) {
+            return res.status(500).json({ message: err });
+        }
+        return res.status(200).json({ message: 'Message marked as read' });
+    });
+});
+
+app.get('/messages/:id', (req, res) => {
+    const { id } = req.params;
+    pool.query('SELECT * FROM messages WHERE id = $1', [ id], (err, result) => {
+        if (err) {
+            return res.status(500).json({ message: err });
+        }
+        return res.status(200).json(result.rows);
+    });
+});
 
 
 app.get('/cats-shop', (req, res) => {
@@ -197,10 +252,10 @@ app.get('/cats-shop', (req, res) => {
 });
 
 app.post('/cats-shop/:id', (req, res) => {
-    const { ownerId, message, price, sender } = req.body;
+    const { ownerId, message, price, sender, senderName, senderSurname, senderEmail } = req.body;
     const catId = req.params.id;
     const date = new Date();
-    pool.query('INSERT INTO messages (user_id, cat_id, message, asked_price, date_of_message, sender_id) VALUES ($1, $2, $3, $4, $5, $6)', [ownerId, catId, message, price, date, sender], (err, result) => {
+    pool.query('INSERT INTO messages (user_id, cat_id, message, asked_price, date_of_message, sender_id, sender_name, sender_surname, sender_email) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)', [ownerId, catId, message, price, date, sender, senderName, senderSurname, senderEmail], (err, result) => {
         if (err) {
             return res.status(500).json({ message: err });
         }

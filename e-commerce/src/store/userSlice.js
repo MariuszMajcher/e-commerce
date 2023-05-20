@@ -4,7 +4,8 @@ import { createSlice } from '@reduxjs/toolkit'
 
 const initialState =  {
     user: {},
-    loggedIn: false
+    loggedIn: false,
+    userExists: false
 }
 
 const userSlice = createSlice({
@@ -21,6 +22,9 @@ const userSlice = createSlice({
             console.log('logging out')
             state.user = {}
             state.loggedIn = false
+        },
+        setUserExists(state, action) {
+            state.userExists = action.payload
         }
     }
     })
@@ -30,5 +34,6 @@ const userSlice = createSlice({
 
 export const selectUser = state => state.user.user
 export const selectLoggedIn = state => state.user.loggedIn
-export const { loadUser, logIn, logOut } = userSlice.actions
+export const selectUserExists = state => state.user.userExists
+export const { loadUser, logIn, logOut, setUserExists } = userSlice.actions
 export default userSlice.reducer

@@ -1,16 +1,24 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { logIn, loadUser } from '../store/userSlice'
-import {  selectLoggedIn} from '../store/userSlice'
+import { logIn, loadUser, setUserExists } from '../store/userSlice'
+import {  selectLoggedIn, selectUserExists} from '../store/userSlice'
+import { loadMessages } from '../store/messagesSlice'
 import { useNavigate } from 'react-router-dom'
 
 const Login = () => {
 
   const dispatch = useDispatch()
   const logged = useSelector(selectLoggedIn)
+  const userExists = useSelector(selectUserExists)
   const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+
+  useEffect(() => {
+    setTimeout(() => {
+      dispatch(setUserExists(false))
+    }, 3000)
+  }, [userExists])
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -32,8 +40,10 @@ const Login = () => {
             navigate('/new-user')
             return false
         } 
+        const { messages, ...userData } = data
         dispatch(logIn())
-        dispatch(loadUser(data))
+        dispatch(loadMessages(messages))
+        dispatch(loadUser(userData))
         navigate('/sell-cat')
         })
     .catch(err => console.log(err))
@@ -50,6 +60,7 @@ const Login = () => {
 
   return (
     <div>
+      {userExists ? <h2>Sorry, that user already exists</h2> : null}
         <form onSubmit={handleSubmit}>
             <h2>Log in please</h2>
             <input 
@@ -74,3 +85,5 @@ export default Login
 
 // IMPORTANT:
 /*NEED TO MAKE SURE THAT AFTER LOGIN ALL APART OF PASSWORD IS BEING STORED IN LS */
+// upon login the messages will be loaded that correspond to the user
+// this will be done using the same fetch request 

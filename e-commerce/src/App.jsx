@@ -13,6 +13,8 @@ import Profile from './components/Profile'
 import CatBreeds from './components/CatBreeds'
 import NewCatForSale from './components/NewCatForSale'
 import BuyCat from './components/BuyCat'
+import Messages from './components/Messages'
+import Message from './components/Message'
 
 function App() {
   const dispatch = useDispatch()
@@ -45,6 +47,7 @@ useEffect(() => {
       <Link to='/login'>Login</Link>
       <Link to='/cats-shop'>Cats Shop</Link>
       <Link to='/sell-cat'>Sell Cat</Link>
+      <Link to='/profile'>Profile</Link>
     </nav>
       <Routes>
         <Route path='/cat-breeds' element={<CatBreeds />} />
@@ -54,6 +57,8 @@ useEffect(() => {
         <Route path='/sell-cat' element={<NewCatForSale />} />
         <Route path='/profile' element={<Profile />} />
         <Route path='/cats-shop/:id' element={<BuyCat />} />
+        <Route path='/messages' element={<Messages />} />
+        <Route path='/messages/:id' element={<Message />} /> 
       </Routes>
 
       <button onClick={() => dispatch(logOut())}>Log out</button>

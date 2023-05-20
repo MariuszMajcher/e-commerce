@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 // will pass on the information about the cat and its owner, to be able to send a request to the owner
 import { useSelector } from 'react-redux'
 import { selectBuyingCat } from '../store/buyingCatSlice'
@@ -7,10 +8,15 @@ const BuyCat = () => {
 
   const buyingCat = useSelector(selectBuyingCat)
   const user = useSelector(selectUser)
+  const [owner, setOwner] = useState(false)
   const [message, setMessage] = useState('')
   const [price, setPrice] = useState(0)
 
-  
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    setOwner(buyingCat.user_id === user.id)
+    }, [buyingCat, user])  
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -24,7 +30,7 @@ const BuyCat = () => {
   const handleSubmit = (e) => {
     e.preventDefault()
     // send a request to the owner
-    fetch(`http//localhost:3000/cats-shop/${buyingCat.id}`, {
+    fetch(`http://localhost:3000/cats-shop/${buyingCat.id}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -35,12 +41,16 @@ const BuyCat = () => {
             message: message,
             price: price,
             ownerId: buyingCat.user_id,
-            sender: user.id
+            sender: user.id,
+            senderName: user.first_name,
+            senderSurname: user.last_name,
+            senderEmail: user.email
             })
             })
             .then(response => response.json())
             .then(data => {
                 console.log(data.message)
+                navigate('/cats-shop')
             })
   }
   // after the seller accepts the sale the cat will be removed from the shop, the cat will remain in the database but will not
@@ -50,7 +60,7 @@ const BuyCat = () => {
     <form onSubmit={handleSubmit}>
         <textarea name="message" value={message} onChange={handleChange} placeholder="Message to the owner" />
         <input type="number" name="price" value={price} onChange={handleChange} placeholder="Price you are willing to pay" />
-        <input type="submit" value="Buy" />
+        <input type="submit" value="Buy" disabled={owner ? true : false}/>
     </form>
   )
 }

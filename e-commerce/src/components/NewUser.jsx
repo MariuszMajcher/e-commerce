@@ -1,4 +1,7 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { setUserExists } from '../store/userSlice'
 import '../styling/NewUser.css'
 
 
@@ -10,6 +13,9 @@ const NewUser = () => {
   const [lastName, setLastName] = useState('')
   const [favoriteBreed, setFavoriteBreed] = useState('')
   const [address, setAddress] = useState('')
+
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
 
   const [bigLetter, setBigLetter] = useState(false)
   const [smallLetter, setSmallLetter] = useState(false)
@@ -80,7 +86,15 @@ const NewUser = () => {
                     })
                 })
                 .then(res => res.json())  
-                .then(data => console.log(data))
+                .then(data => {
+                    if(data.message === 'Email already exists') {
+                        dispatch(setUserExists(true))
+                        navigate('/login')
+                    } else {
+                        dispatch(setUserExists(false))
+                        navigate('/login')
+                    }
+                })
                 .catch(err => console.log(err))
     }
 

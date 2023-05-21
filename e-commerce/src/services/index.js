@@ -233,7 +233,7 @@ app.patch('/messages/:id', (req, res) => {
 
 app.get('/messages/:id', (req, res) => {
     const { id } = req.params;
-    pool.query('SELECT * FROM messages WHERE id = $1', [ id], (err, result) => {
+    pool.query('SELECT * FROM messages WHERE user_id = $1', [ id], (err, result) => {
         if (err) {
             return res.status(500).json({ message: err });
         }

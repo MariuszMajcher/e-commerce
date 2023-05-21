@@ -1,7 +1,6 @@
-import { useSelector, useDispatch } from "react-redux"
-import { loadMessages } from "../store/messagesSlice"
+import { useSelector } from "react-redux"
 import { Link } from "react-router-dom"
-import { selectMessages } from "../store/messagesSlice"
+import {  selectMessages } from "../store/messagesSlice"
 
 
 
@@ -9,8 +8,9 @@ import { selectMessages } from "../store/messagesSlice"
 const Messages = () => {
 
    
-    const dispatch = useDispatch()
     const messages = useSelector(selectMessages);
+    
+    console.log(messages)
     const messageBoxes = messages.map((message) => {
       return (
        

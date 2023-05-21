@@ -2,7 +2,7 @@ import { useSelector, useDispatch } from "react-redux"
 import { useEffect } from "react"
 import { selectUser } from "../store/userSlice"
 import { Link } from "react-router-dom"
-import { loadMessages } from "../store/messagesSlice"
+import { loadAllMessages } from "../store/messagesSlice"
 
 const Profile = () => {
   const dispatch = useDispatch()
@@ -12,7 +12,7 @@ const Profile = () => {
     fetch(`http://localhost:3000/messages/${user.id}`)
       .then(res => res.json())
       .then(data => {
-        dispatch(loadMessages(data))
+        dispatch(loadAllMessages(data))
       })
   }, [])
 

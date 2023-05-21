@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { logIn, loadUser, setUserExists } from '../store/userSlice'
 import {  selectLoggedIn, selectUserExists} from '../store/userSlice'
-import { loadMessages } from '../store/messagesSlice'
+import { loadAllMessages } from '../store/messagesSlice'
 import { useNavigate } from 'react-router-dom'
 
 const Login = () => {
@@ -42,7 +42,7 @@ const Login = () => {
         } 
         const { messages, ...userData } = data
         dispatch(logIn())
-        dispatch(loadMessages(messages))
+        dispatch(loadAllMessages(messages))
         dispatch(loadUser(userData))
         navigate('/sell-cat')
         })

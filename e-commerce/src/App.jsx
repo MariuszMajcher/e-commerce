@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { loadCats, clearCats } from './store/catsSlice';
 import { useEffect } from 'react';
 import { selectLoggedIn } from './store/userSlice';
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
 
 import NewUser from './components/NewUser';
 import Login from './components/Login';
@@ -15,6 +17,8 @@ import BuyCat from './components/BuyCat';
 import Messages from './components/Messages';
 import Message from './components/Message';
 import Logout from './components/Logout'
+
+const stripePromise = loadStripe('pk_test_51I6Z4QJ')
 
 function App() {
   const dispatch = useDispatch();
@@ -40,31 +44,40 @@ function App() {
     loadAllCats();
   }, []);
 
+  const options = {
+    // passing the client secret obtained from the server
+    clientSecret: '{{CLIENT_SECRET}}',
+  };
+
   return (
-    <BrowserRouter>
-      <nav>
-        <Link to="/new-user">New User</Link>
-        <Link to="/login">Login</Link>
-        <Link to="/cats-shop">Cats Shop</Link>
-        <Link to="/sell-cat">Sell Cat</Link>
-        <Link to="/profile">Profile</Link>
-      </nav>
-      <Routes>
-        <Route path="/cat-breeds" element={<CatBreeds />} />
-        <Route path="/new-user" element={<NewUser />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/cats-shop" element={<CatShop />} />
-        <Route path="/sell-cat" element={<NewCatForSale />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/cats-shop/:id" element={<BuyCat />} />
-        <Route path="/messages" element={<Messages />} />
-        <Route path="/messages/:id" element={<Message />} />
+    <Elements stripe={stripePromise} options={options}>
+      <BrowserRouter>
+        <nav>
+          <Link to="/new-user">New User</Link>
+          <Link to="/login">Login</Link>
+          <Link to="/cats-shop">Cats Shop</Link>
+          <Link to="/sell-cat">Sell Cat</Link>
+          <Link to="/profile">Profile</Link>
+        </nav>
+        <Routes>
+          <Route path="/cat-breeds" element={<CatBreeds />} />
+          <Route path="/new-user" element={<NewUser />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/cats-shop" element={<CatShop />} />
+          <Route path="/sell-cat" element={<NewCatForSale />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/cats-shop/:id" element={<BuyCat />} />
+          <Route path="/messages" element={<Messages />} />
+          <Route path="/messages/:id" element={<Message />} />
+          
+        </Routes>
+          <Logout />
         
-      </Routes>
-        <Logout />
-      
-    </BrowserRouter>
+      </BrowserRouter>
+    </Elements>
   );
 }
 
 export default App;
+
+// Added stripe to the App component, will need to check exactly how to implement it before i go any further

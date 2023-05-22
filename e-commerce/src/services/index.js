@@ -251,6 +251,16 @@ app.get('/cats-shop', (req, res) => {
     });
 });
 
+app.get('/products', (req, res) => {
+    pool.query('SELECT * FROM items ORDER BY id ASC', (err, result) => {
+        if(err) {   
+            return res.status(500).json({ message: err });
+            }
+            return res.status(200).json(result.rows);
+        });
+    });
+    
+
 app.post('/cats-shop/:id', (req, res) => {
     const { ownerId, message, price, sender, senderName, senderSurname, senderEmail } = req.body;
     const catId = req.params.id;

@@ -10,7 +10,7 @@ const CatItem = (props) => {
 
   const  dispatch = useDispatch()
 
-
+  
   let priceString 
   // find the breed object that matches the breed_id
   const breed = props.breeds.find(breed => breed.id === breed_id)

@@ -4,7 +4,6 @@ import userReducer from "./userSlice";
 import buyingCatSlice from "./buyingCatSlice";
 import messagesSlice from "./messagesSlice";
 import currentMessageSlice from "./currentMessageSlice";
-import shopReducer from "./shopSlice";
 
 const localStorageMiddleware = store => next => action => {
     const result = next(action);
@@ -31,8 +30,7 @@ const store = configureStore({
         user: userReducer,
         buy: buyingCatSlice,
         messages: messagesSlice,
-        current: currentMessageSlice,
-        shop: shopReducer
+        current: currentMessageSlice
     }, preloadedState: getLocalStorageState(),
     middleware: getDefaultMiddleware => getDefaultMiddleware().concat(localStorageMiddleware)
 });

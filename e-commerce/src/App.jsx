@@ -4,8 +4,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { loadCats, clearCats } from './store/catsSlice';
 import { useEffect } from 'react';
 import { selectLoggedIn } from './store/userSlice';
-import { Elements } from '@stripe/react-stripe-js';
-import { loadStripe } from '@stripe/stripe-js';
 
 import NewUser from './components/NewUser';
 import Login from './components/Login';
@@ -18,7 +16,6 @@ import Messages from './components/Messages';
 import Message from './components/Message';
 import Logout from './components/Logout'
 
-const stripePromise = loadStripe('pk_test_51I6Z4QJ')
 
 function App() {
   const dispatch = useDispatch();
@@ -44,13 +41,10 @@ function App() {
     loadAllCats();
   }, []);
 
-  const options = {
-    // passing the client secret obtained from the server
-    clientSecret: '{{CLIENT_SECRET}}',
-  };
+  
 
   return (
-    <Elements stripe={stripePromise} options={options}>
+    
       <BrowserRouter>
         <nav>
           <Link to="/new-user">New User</Link>
@@ -74,7 +68,7 @@ function App() {
           <Logout />
         
       </BrowserRouter>
-    </Elements>
+   
   );
 }
 

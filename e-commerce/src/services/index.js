@@ -221,6 +221,31 @@ app.post('/sell-cat', upload.single('imageFile'), (req, res) => {
     });
 });
 
+
+// Need to check for mistakes in DB queries
+app.post('/messages/:id', (req, res) => {
+    const senderId = req.params.id
+    const { email, message, userId, usernName, userLast, userEmail } = req.body
+    const date = new Date()
+    let receiverId
+
+    // find the id coresponding to the receiver email 
+    pool.query('SELECT * FROM users WHERE email = $1', [email], (err, result) => {
+        if(err) {
+            return res.status(500).json({message: err})
+        }
+        receiverId = result.rows
+    })
+
+    pool.query('INSERT INTO messages (sender_id, sender_name, sender_surname, sender_email, message, date_of_message, user_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8',
+    [userId, userName, userLast, userEmail, message, date, receiverId], (err, result) => {
+        if(err) {
+            return res.status(500).json({message: err})
+        }
+        return res.status(200).json({message: 'Message sent'})
+    })
+})
+
 app.patch('/messages/:id', (req, res) => {
     const { id } = req.params;
     pool.query('UPDATE messages SET message_read = TRUE WHERE id = $1', [ id], (err, result) => {
@@ -252,13 +277,25 @@ app.get('/cats-shop', (req, res) => {
 });
 
 app.get('/products', (req, res) => {
-    pool.query('SELECT * FROM items ORDER BY id ASC', (err, result) => {
+    pool.query('SELECT item_id, item_name, price FROM Items UNION SELECT toy_id, item_name, price FROM Toys UNION SELECT food_id, item_name, price FROM Food UNION SELECT bed_id, item_name, price FROM Bed UNION SELECT litter_id, item_name, price  FROM Litter', (err, result) => {
         if(err) {   
             return res.status(500).json({ message: err });
             }
             return res.status(200).json(result.rows);
         });
     });
+
+
+    // WILL NEED TO REPLACE GENERIC ERRORS WITH MORE ADEQUATE ONES
+app.delete('/cats-shop/:id', (req, res) => {
+    const id = req.params.id
+    pool.query('DELETE FROM messages WHERE id = $1', [id], (err, result) => {
+        if (err) {
+            return res.status(500).json({message: err})
+        }
+    return res.status(202).json({message: 'Message deleted sucessfuly'})
+    })
+})
     
 
 app.post('/cats-shop/:id', (req, res) => {

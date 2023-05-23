@@ -1,13 +1,16 @@
 import { useSelector } from "react-redux"
 import { Link } from "react-router-dom"
 import {  selectMessages } from "../store/messagesSlice"
+import { useState } from "react"
+
+import SendMessage from "./SendMessage"
 
 
 
 
 const Messages = () => {
 
-   
+    const [sendMessage, setSendMessage] = useState(false)
     const messages = useSelector(selectMessages);
     
     console.log(messages)
@@ -47,6 +50,8 @@ const Messages = () => {
   return (
     <div>
         {messageBoxes}
+        <button onClick={() => setSendMessage(prev => !prev)}>Send a Message</button>
+        {sendMessage ? <SendMessage />: null}
     </div>
   )
 }

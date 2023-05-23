@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import { useSelector, useDispatch } from "react-redux"
 import { selectUser } from "../store/userSlice"
 import { loadCurrentMessage } from "../store/currentMessageSlice"
@@ -13,6 +13,7 @@ const Message = () => {
     const [send, setSend] = useState(false)
     const user = useSelector(selectUser)
     const { state } = useLocation()
+    const navigate = useNavigate()
     let message
     
     const messageReceived = useSelector(selectCurrentMessage)
@@ -37,30 +38,40 @@ const Message = () => {
 
 
 
-    const handleSubmit = () => {
-        fetch(`http://localhost:3000/cats-shop/${message.cat_id}`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              ownerId: message.sender_id, /* IN THE FUTURE WILL CHANGE IT TO RECEIVER_ID */
-              message: messageBack, 
-              price: message.asked_price,
-              sender: user.id, 
-              senderName: user.first_name, 
-              senderSurname: user.last_name, 
-              senderEmail: user.email
-            })
+  const handleSubmit = () => {
+      fetch(`http://localhost:3000/cats-shop/${message.cat_id}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            ownerId: message.sender_id, /* IN THE FUTURE WILL CHANGE IT TO RECEIVER_ID */
+            message: messageBack, 
+            price: message.asked_price,
+            sender: user.id, 
+            senderName: user.first_name, 
+            senderSurname: user.last_name, 
+            senderEmail: user.email
           })
-          .then(response => response.json())
-          .then(data => {
-            console.log(data)
-            setSend(false)
-            
-          });
-    }
+        })
+        .then(response => response.json())
+        .then(data => {
+          console.log(data)
+          setSend(false)
+          
+        });
+  }
 
+  const handleDelete = () => {
+    console.log(message.id)
+    fetch(`http://localhost:3000/cats-shop/${message.id}`, {
+      method: 'DELETE'
+    })
+  .then(res => res.json())
+  .then(data => { if(data.message === 'Message sucessfuly deleted') {
+    navigate('/messages')
+  }})
+  }
 
 
   if (!message) {
@@ -79,6 +90,7 @@ const Message = () => {
                   <textarea onChange={(e) => setMessageBack(e.target.value)} value={messageBack}></textarea>
                   <button type="submit">Send</button>
                 </form> : null}
+        <button onClick={handleDelete}>Delete message</button>
     </div>
   )
 }

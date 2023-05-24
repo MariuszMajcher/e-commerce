@@ -16,10 +16,14 @@ const Message = () => {
  
     const user = useSelector(selectUser)
     const { state } = useLocation()
+
+    dispatch(loadCurrentMessage(state.message))
     const navigate = useNavigate()
     let message
-    
+
+  
     const messageReceived = useSelector(selectCurrentMessage)
+
 
     if (state === null) {
       message = messageReceived
@@ -28,31 +32,30 @@ const Message = () => {
     }
 
     useEffect(() => {
-      if(messageReceived.cat_id) {
-        fetch(`http://localhost:3000/cat/${messageReceived.cat_id}`)
-        .then(res => res.json())
-        .then(data => setCatOwnerId(data.id.user_id))
+      const fetchData = async () => {
+        try {
+          if(messageReceived.cat_id) {
+            const res = await fetch(`http://localhost:3000/cat/${messageReceived.cat_id}`)
+            const data = await res.json()
+              console.log(data)
+             return setCatOwnerId(data.id.user_id)
+          }
+        } catch (error) {
+          console.log(error)
+        }
       }
       // Check if the user receiving message is the owner of the cat
-      setIsOwner(messageReceived.user_id === catOwnerId)
-     
-    }, [catOwnerId])
-    // This does not work as inteded!
+     fetchData()
+    }, [messageReceived])
 
-    console.log(isOwner)
-    
     useEffect(() => {
-      dispatch(loadCurrentMessage(message))
-    }, [])
-
-   
-
-
+      setIsOwner(messageReceived.user_id === catOwnerId)
+    }, [catOwnerId])
+    
     const handleClick = () => {
         setSend(true)
     }
-    console.log(catOwnerId)
-    console.log(messageReceived)
+    
 
 
 
@@ -74,14 +77,11 @@ const Message = () => {
         })
         .then(response => response.json())
         .then(data => {
-          console.log(data)
           setSend(false)
-          
         });
   }
 
   const handleDelete = () => {
-    console.log(message.id)
     fetch(`http://localhost:3000/cats-shop/${message.id}`, {
       method: 'DELETE'
     })

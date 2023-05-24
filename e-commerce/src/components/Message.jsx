@@ -11,6 +11,9 @@ const Message = () => {
     const dispatch = useDispatch()
     const [messageBack, setMessageBack] = useState('')
     const [send, setSend] = useState(false)
+    const [catOwnerId, setCatOwnerId] = useState()
+    const [isOwner, setIsOwner] = useState(false)
+ 
     const user = useSelector(selectUser)
     const { state } = useLocation()
     const navigate = useNavigate()
@@ -24,7 +27,20 @@ const Message = () => {
       message = state.message
     }
 
-    console.log(message)
+    useEffect(() => {
+      if(messageReceived.cat_id) {
+        fetch(`http://localhost:3000/cat/${messageReceived.cat_id}`)
+        .then(res => res.json())
+        .then(data => setCatOwnerId(data.id.user_id))
+      }
+      // Check if the user receiving message is the owner of the cat
+      setIsOwner(messageReceived.user_id === catOwnerId)
+     
+    }, [catOwnerId])
+    // This does not work as inteded!
+
+    console.log(isOwner)
+    
     useEffect(() => {
       dispatch(loadCurrentMessage(message))
     }, [])
@@ -35,6 +51,8 @@ const Message = () => {
     const handleClick = () => {
         setSend(true)
     }
+    console.log(catOwnerId)
+    console.log(messageReceived)
 
 
 
@@ -91,8 +109,12 @@ const Message = () => {
                   <button type="submit">Send</button>
                 </form> : null}
         <button onClick={handleDelete}>Delete message</button>
+         {isOwner && <button onClick={() => console.log('Sent')}>Agree!</button>} 
     </div>
   )
 }
 
 export default Message
+
+// If the message have a cat_id and the cat_id will corespond to the user_id the message will have a componnent agree to sale, 
+// this will send a message with a button to carry on with the payement using stripe

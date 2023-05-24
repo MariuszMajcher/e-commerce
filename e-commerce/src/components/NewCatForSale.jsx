@@ -54,6 +54,10 @@ const NewCatForSale = () => {
     const onSubmit = (e) => {
       e.preventDefault()
 
+      if(gender === 'Select a breed') {
+        return false
+      }
+
       // if user is not logged in, redirect to login page
       if(!loggedIn) {
         navigate('/login')
@@ -78,9 +82,6 @@ const NewCatForSale = () => {
       formData.append('name', name);
       console.log(date, DoB)
       
-      // ALSO NEED TO FIGURE OUT THE WAY TO MAKE THE FIRST CAT CHOOSABLE MAYBE THE FIRST OPTION TO BE JUST select a cat THAT WILL BE AN OPTION
-      // BUT WILL NOT ACTIVATE THE SUBMIT BUTTON, WILL TRY TO MAKE IT SO THE BUTTON BECOMES ACTIVE WHEN CERTAIN CONDITIONS ARE MET
-
       // if user is logged in, send the data to the server
       fetch('http://localhost:3000/sell-cat', {
           method: 'POST',
@@ -112,8 +113,12 @@ const NewCatForSale = () => {
         gender: setGender,
 
     }
+    
     // if the target is the dropdown, find the cat object in the array of cats and set the breedId to the id of the cat
     if(e.target.name === 'breedId') {
+      if(e.target.value === 'Select a Breed') {
+        return false
+      }
       const bID = cats.find(cat => cat.name === e.target.value).id
       // set the breed to the value of the dropdown
       setBreed(e.target.value)
@@ -134,6 +139,7 @@ const NewCatForSale = () => {
         {/* AFTER CHANGING THE AGE TO DATE THE REQUEST DOES NOT PASS */}
           <input type="number" name="price"  value={price} placeholder="Price" onChange={handleChange} required/>
           <select name="breedId" value={breed} onChange={handleChange} required>
+            <option value="Select a Breed"  aria-hidden="true">Select a breed</option>
               {options}
           </select>
           <div>
@@ -148,7 +154,7 @@ const NewCatForSale = () => {
           <div className="image-prev">
             {imagePreview && <img src={imagePreview} alt="Selected Image Preview" />}
           </div>
-          <input type="file" accept="image/*" onChange={handleFileInputChange} /> 
+          <input type="file" accept="image/*" onChange={handleFileInputChange} required/> 
           <button type="submit"> Sell Cat! </button>
       </form>
     </div>

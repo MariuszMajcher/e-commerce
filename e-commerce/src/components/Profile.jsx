@@ -1,12 +1,14 @@
 import { useSelector, useDispatch } from "react-redux"
 import { useEffect } from "react"
 import { selectUser } from "../store/userSlice"
+import { selectMessages } from "../store/messagesSlice"
 import { Link } from "react-router-dom"
 import { loadAllMessages } from "../store/messagesSlice"
+import '../styling/Profile.css'
 
 const Profile = () => {
   const dispatch = useDispatch()
-  // this componennt will be responsible for adding some more information that is not required
+  const messages = useSelector(selectMessages)
 
   useEffect(() => {
     fetch(`http://localhost:3000/messages/${user.id}`)
@@ -16,20 +18,18 @@ const Profile = () => {
       })
   }, [])
 
-
+  const read = messages.every(element => {
+    element.read === true
+  });
+  console.log(read)
 
   const user = useSelector(selectUser)
   return (
     <div>
-    <h1>welcome {user.first_name}</h1>
-    <Link to="/messages">Messages</Link>
+      <h1>welcome {user.first_name}</h1>
+      <Link to="/messages">Messages{!read && <span className="red-dot"></span>}</Link>
     </div>
   )
 }
 
 export default Profile
-// profile will need to have a messages received and sent box, 
-// requests from the buyers will be sent to the seller assoctiated with the cat
-// will need to have a box icon that will access messages, the box will have 2 states, up to date and new messages received
-// upon loging in the messages that correspond to the user will be loaded, the messages will be stored in the store
-// if the messagess are not read the box will have a red dot, if the messages are read the box will have a green dot

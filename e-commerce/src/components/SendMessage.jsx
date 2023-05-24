@@ -16,7 +16,6 @@ const SendMessage = () => {
         'Content-type': 'application/json'
     },
     body: JSON.stringify({
-        email: email,
         message: message,
         userId : user.id,
         userName: user.first_name,
@@ -27,7 +26,7 @@ const SendMessage = () => {
 
   return (
     <form onSubmit={handleSubmit}>
-        <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} placeholder='Email address of the target'></input>
+        <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete='true' placeholder='Email address of the target'></input>
         <textarea value={message} onChange={(e) => setMessage(e.target.value)} placeholder='Message' />
         <button type="submit">Send</button>
     </form>

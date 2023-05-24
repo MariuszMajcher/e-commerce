@@ -222,29 +222,28 @@ app.post('/sell-cat', upload.single('imageFile'), (req, res) => {
 });
 
 
-// Need to check for mistakes in DB queries
-app.post('/messages/:id', (req, res) => {
-    const senderId = req.params.id
-    const { email, message, userId, usernName, userLast, userEmail } = req.body
-    const date = new Date()
-    let receiverId
+app.post('/messages/:id', async (req, res) => {
+    try {
+      const email = req.params.id;
+      const {  message, userId, userName, userLast, userEmail } = req.body;
+      const date = new Date();
+      let receiverId;
+  
+      const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+      if (result.rows.length > 0) {
+        receiverId = result.rows[0].id;
+        await pool.query('INSERT INTO messages (sender_id, sender_name, sender_surname, sender_email, message, date_of_message, user_id) VALUES ($1, $2, $3, $4, $5, $6, $7)',
+          [userId, userName, userLast, userEmail, message, date, receiverId]);
+        return res.status(200).json({ message: 'Message sent' });
+      } else {
+        return res.status(404).json({ message: 'Receiver not found' });
+      }
+    } catch (err) {
+      return res.status(500).json({ message: err });
+    }
+  });
 
-    // find the id coresponding to the receiver email 
-    pool.query('SELECT * FROM users WHERE email = $1', [email], (err, result) => {
-        if(err) {
-            return res.status(500).json({message: err})
-        }
-        receiverId = result.rows
-    })
-
-    pool.query('INSERT INTO messages (sender_id, sender_name, sender_surname, sender_email, message, date_of_message, user_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8',
-    [userId, userName, userLast, userEmail, message, date, receiverId], (err, result) => {
-        if(err) {
-            return res.status(500).json({message: err})
-        }
-        return res.status(200).json({message: 'Message sent'})
-    })
-})
+// REALLY NEED TO MAKE CHANGES TO THE COLUMN NAMES, IT IS VERY CONFUSING NOW
 
 app.patch('/messages/:id', (req, res) => {
     const { id } = req.params;
@@ -275,6 +274,16 @@ app.get('/cats-shop', (req, res) => {
         return res.status(200).json(result.rows);
     });
 });
+
+app.get('/cat/:id', (req, res) => {
+    const catId = req.params.id
+    pool.query('SELECT user_id FROM cats_for_sale WHERE id = $1', [catId], (error, result) => {
+        if(error) {
+            console.log(error)
+        }
+        res.status(200).json({id: result.rows[0]})
+    })
+})
 
 app.get('/products', (req, res) => {
     pool.query('SELECT item_id, item_name, price FROM Items UNION SELECT toy_id, item_name, price FROM Toys UNION SELECT food_id, item_name, price FROM Food UNION SELECT bed_id, item_name, price FROM Bed UNION SELECT litter_id, item_name, price  FROM Litter', (err, result) => {
@@ -314,3 +323,5 @@ app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`);
     }
 )
+
+// Will need to separate routers

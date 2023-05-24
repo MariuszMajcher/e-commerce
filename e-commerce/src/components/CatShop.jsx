@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { selectAllCats } from '../store/catsSlice';
 import CatItem from './CatItem';
@@ -8,7 +8,14 @@ const CatShop = () => {
   const [cats, setCats] = useState([]);
   const [breeds, setBreeds] = useState([]);
   const allCats = useSelector(selectAllCats)
+  
+  const containerRef = useRef(null);
 
+  const handleMouseWheel = (e) => {
+    e.preventDefault()
+    const container = containerRef.current;
+    container.scrollLeft += e.deltaY /2
+  };
 
   useEffect(() => {
     setBreeds(allCats.cats)
@@ -28,9 +35,15 @@ const CatShop = () => {
     fetchCats();
   }, []);
 
-  const catItems = cats.map(cat => <CatItem key={cat.id} cat={cat} breeds={breeds}/>);
+  const catItems = cats.map(cat => <CatItem 
+                                      key={cat.id} 
+                                      cat={cat} 
+                                      breeds={breeds}
+                                      />);
   return (
-    <div className="cat-shop">
+    <div className="cat-shop"
+         ref={containerRef}
+         onWheel={handleMouseWheel}>
       {catItems}
     </div>
   );

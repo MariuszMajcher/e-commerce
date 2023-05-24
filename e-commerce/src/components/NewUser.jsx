@@ -102,16 +102,6 @@ const NewUser = () => {
 
   return (
     <div className="new-user">
-        <div className= "password-validation">
-        {!invalidLength && <p className="invalid">Password must be at least 8 characters long</p>}
-        {!bigLetter && <p className="invalid">Password must contain a capital letter</p>}
-        {!smallLetter && <p className="invalid">Password must contain a lowercase letter</p>}
-        {!number && <p className="invalid">Password must contain a number</p>}
-        {!specialCharacter && <p className="invalid">Password must contain a special character</p>}
-        {invalidCharacter && <p className="invalid">Password contains invalid characters</p> }
-        {validPassword && <p className="invalid">Passwords do not match</p>}
-        {!validEmail && <p className="invalid">Invalid email address</p>}
-        </div>
         <form>
             <h2>Sign up please</h2>
             <input value={email} onChange={handleChange} name="email" type="text" placeholder="Your email address or user name" required/>
@@ -124,6 +114,16 @@ const NewUser = () => {
 
             <button onClick={handleSubmit}>Submit</button>
         </form>
+        <div className= "password-validation">
+        {!invalidLength && <p className="invalid">Password must be at least 8 characters long</p>}
+        {!bigLetter && <p className="invalid">Password must contain a capital letter</p>}
+        {!smallLetter && <p className="invalid">Password must contain a lowercase letter</p>}
+        {!number && <p className="invalid">Password must contain a number</p>}
+        {!specialCharacter && <p className="invalid">Password must contain a special character</p>}
+        {invalidCharacter && <p className="invalid">Password contains invalid characters</p> }
+        {validPassword && <p className="invalid">Passwords do not match</p>}
+        {!validEmail && <p className="invalid">Invalid email address</p>}
+        </div>
     </div>
   )
 }

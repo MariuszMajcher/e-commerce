@@ -53,9 +53,9 @@ const Message = () => {
     }, [catOwnerId])
     
     const handleClick = () => {
-        setSend(true)
+        
     }
-    
+    // will need to add a table with accepted offer id, accept bool, accepted_amount, 
 
 
 

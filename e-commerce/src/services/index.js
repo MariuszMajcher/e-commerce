@@ -110,22 +110,13 @@ passport.deserializeUser((id, done) => {
     });
 });
 
-// app.post('/login', passport.authenticate('local', {
-// failureRedirect: '/new-user'
-// }),
-// (req, res) => {
-//     res.send(req.user);
-// }
-// );
-
-
 app.post('/login', passport.authenticate('local', {
     failureRedirect: '/new-user'
 }),
 (req, res) => {
     // Fetch messages for the logged-in user from the "messages" table
     const userId = req.user.id;
-    pool.query('SELECT * FROM messages WHERE user_id = $1', [userId], (err, result) => {
+    pool.query('SELECT * FROM messages WHERE receiver_id = $1', [userId], (err, result) => {
         if (err) {
             return res.status(500).json({ message: err });
         }
@@ -222,6 +213,21 @@ app.post('/sell-cat', upload.single('imageFile'), (req, res) => {
 });
 
 
+
+// REALLY NEED TO MAKE CHANGES TO THE COLUMN NAMES, IT IS VERY CONFUSING NOW
+
+
+
+app.get('/messages/:id', (req, res) => {
+    const { id } = req.params;
+    pool.query('SELECT * FROM messages WHERE receiver_id = $1', [ id], (err, result) => {
+        if (err) {
+            return res.status(500).json({ message: err });
+        }
+        return res.status(200).json(result.rows);
+    });
+});
+
 app.post('/messages/:id', async (req, res) => {
     try {
       const email = req.params.id;
@@ -232,7 +238,7 @@ app.post('/messages/:id', async (req, res) => {
       const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
       if (result.rows.length > 0) {
         receiverId = result.rows[0].id;
-        await pool.query('INSERT INTO messages (sender_id, sender_name, sender_surname, sender_email, message, date_of_message, user_id) VALUES ($1, $2, $3, $4, $5, $6, $7)',
+        await pool.query('INSERT INTO messages (sender_id, sender_name, sender_surname, sender_email, message, date_of_message, receiver_id) VALUES ($1, $2, $3, $4, $5, $6, $7)',
           [userId, userName, userLast, userEmail, message, date, receiverId]);
         return res.status(200).json({ message: 'Message sent' });
       } else {
@@ -243,7 +249,6 @@ app.post('/messages/:id', async (req, res) => {
     }
   });
 
-// REALLY NEED TO MAKE CHANGES TO THE COLUMN NAMES, IT IS VERY CONFUSING NOW
 
 app.patch('/messages/:id', (req, res) => {
     const { id } = req.params;
@@ -255,25 +260,15 @@ app.patch('/messages/:id', (req, res) => {
     });
 });
 
-app.get('/messages/:id', (req, res) => {
-    const { id } = req.params;
-    pool.query('SELECT * FROM messages WHERE user_id = $1', [ id], (err, result) => {
-        if (err) {
-            return res.status(500).json({ message: err });
-        }
-        return res.status(200).json(result.rows);
-    });
-});
 
-
-app.get('/cats-shop', (req, res) => {
-    pool.query('SELECT * FROM cats_for_sale  WHERE sold_date IS NULL ORDER BY date_for_sale DESC', (err, result) => {
-        if (err) {
+app.get('/products', (req, res) => {
+    pool.query('SELECT item_id, item_name, price FROM Items UNION SELECT toy_id, item_name, price FROM Toys UNION SELECT food_id, item_name, price FROM Food UNION SELECT bed_id, item_name, price FROM Bed UNION SELECT litter_id, item_name, price  FROM Litter', (err, result) => {
+        if(err) {   
             return res.status(500).json({ message: err });
-        }
-        return res.status(200).json(result.rows);
+            }
+            return res.status(200).json(result.rows);
+        });
     });
-});
 
 app.get('/cat/:id', (req, res) => {
     const catId = req.params.id
@@ -285,15 +280,26 @@ app.get('/cat/:id', (req, res) => {
     })
 })
 
-app.get('/products', (req, res) => {
-    pool.query('SELECT item_id, item_name, price FROM Items UNION SELECT toy_id, item_name, price FROM Toys UNION SELECT food_id, item_name, price FROM Food UNION SELECT bed_id, item_name, price FROM Bed UNION SELECT litter_id, item_name, price  FROM Litter', (err, result) => {
-        if(err) {   
+app.get('/cats-shop', (req, res) => {
+    pool.query('SELECT * FROM cats_for_sale  WHERE sold_date IS NULL ORDER BY date_for_sale DESC', (err, result) => {
+        if (err) {
             return res.status(500).json({ message: err });
-            }
-            return res.status(200).json(result.rows);
-        });
+        }
+        return res.status(200).json(result.rows);
     });
+});
 
+app.post('/cats-shop/:id', (req, res) => {
+    const { ownerId, message, price, sender, senderName, senderSurname, senderEmail } = req.body;
+    const catId = req.params.id;
+    const date = new Date();
+    pool.query('INSERT INTO messages (receiver_id, cat_id, message, asked_price, date_of_message, sender_id, sender_name, sender_surname, sender_email) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)', [ownerId, catId, message, price, date, sender, senderName, senderSurname, senderEmail], (err, result) => {
+        if (err) {
+            return res.status(500).json({ message: err });
+        }
+        return res.status(201).json({ message: 'Message sent successfully' });
+    });
+});
 
     // WILL NEED TO REPLACE GENERIC ERRORS WITH MORE ADEQUATE ONES
 app.delete('/cats-shop/:id', (req, res) => {
@@ -307,17 +313,6 @@ app.delete('/cats-shop/:id', (req, res) => {
 })
     
 
-app.post('/cats-shop/:id', (req, res) => {
-    const { ownerId, message, price, sender, senderName, senderSurname, senderEmail } = req.body;
-    const catId = req.params.id;
-    const date = new Date();
-    pool.query('INSERT INTO messages (user_id, cat_id, message, asked_price, date_of_message, sender_id, sender_name, sender_surname, sender_email) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)', [ownerId, catId, message, price, date, sender, senderName, senderSurname, senderEmail], (err, result) => {
-        if (err) {
-            return res.status(500).json({ message: err });
-        }
-        return res.status(201).json({ message: 'Message sent successfully' });
-    });
-});
 
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`);

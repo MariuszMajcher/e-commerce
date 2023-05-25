@@ -26,6 +26,7 @@ const BuyCat = () => {
     }
     setters[name](value)
   } 
+  console.log(user, buyingCat)
 
   const handleSubmit = (e) => {
     e.preventDefault()

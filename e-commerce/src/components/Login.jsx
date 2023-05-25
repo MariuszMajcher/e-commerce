@@ -43,6 +43,7 @@ const Login = () => {
         const { messages, ...userData } = data
         dispatch(logIn())
         dispatch(loadAllMessages(messages))
+        console.log(userData)
         dispatch(loadUser(userData))
         navigate('/sell-cat')
         })

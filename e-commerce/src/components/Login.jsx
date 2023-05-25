@@ -1,14 +1,13 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { logIn, loadUser, setUserExists } from '../store/userSlice'
-import {  selectLoggedIn, selectUserExists} from '../store/userSlice'
+import {  selectUserExists} from '../store/userSlice'
 import { loadAllMessages } from '../store/messagesSlice'
 import { useNavigate } from 'react-router-dom'
 
 const Login = () => {
 
   const dispatch = useDispatch()
-  const logged = useSelector(selectLoggedIn)
   const userExists = useSelector(selectUserExists)
   const navigate = useNavigate()
   const [email, setEmail] = useState('')
@@ -19,6 +18,8 @@ const Login = () => {
       dispatch(setUserExists(false))
     }, 3000)
   }, [userExists])
+
+  // login will have a 3 times try, a state that will hold number of wrong tries
 
   const handleSubmit = (e) => {
     e.preventDefault()

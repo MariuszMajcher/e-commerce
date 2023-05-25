@@ -12,27 +12,27 @@ const Profile = () => {
   const user = useSelector(selectUser)
 
   useEffect(() => {
-    fetch(`http://localhost:3000/messages/4`)
+    fetch(`http://localhost:3000/messages/${user.id}`)
       .then(res => res.json())
       .then(data => {
-        console.log(data)
         dispatch(loadAllMessages(data))
       })
   }, [])
 
-  // const read = messages.every(element => {
-  //   element.read === true
-  // });
-  // console.log(read)
+  // somehow this every function does not work as inteded
 
-  
+  const read = messages.every(element => {
+    element.message_read === true
+  });
+
+
   return (
     <div>
       <h1>welcome {user.first_name}</h1>
-      <Link to="/messages">Messages</Link>
+      <Link to="/messages">Messages{!read && <span className="red-dot"></span>}</Link>
     </div>
   )
-  // {!read && <span className="red-dot"></span>}
+  
 }
 
 export default Profile

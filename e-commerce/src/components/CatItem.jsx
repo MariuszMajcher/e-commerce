@@ -3,7 +3,6 @@ import {Link } from 'react-router-dom'
 import { useDispatch } from 'react-redux';
 import { loadBuy } from '../store/buyingCatSlice';
 import '../styling/CatItem.css'
-import image from '../services/uploads/smoke.jpg'
 
 
 const CatItem = (props) => {

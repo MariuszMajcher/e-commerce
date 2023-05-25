@@ -238,6 +238,7 @@ app.post('/messages/:id', async (req, res) => {
       const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
       if (result.rows.length > 0) {
         receiverId = result.rows[0].id;
+        console.log(receiverId)
         await pool.query('INSERT INTO messages (sender_id, sender_name, sender_surname, sender_email, message, date_of_message, receiver_id) VALUES ($1, $2, $3, $4, $5, $6, $7)',
           [userId, userName, userLast, userEmail, message, date, receiverId]);
         return res.status(200).json({ message: 'Message sent' });
@@ -252,13 +253,23 @@ app.post('/messages/:id', async (req, res) => {
 
 app.patch('/messages/:id', (req, res) => {
     const { id } = req.params;
-    pool.query('UPDATE messages SET message_read = TRUE WHERE id = $1', [ id], (err, result) => {
-        if (err) {
-            return res.status(500).json({ message: err });
+    pool.query('UPDATE messages SET message_read = TRUE WHERE id = $1', [ id], (error, result) => {
+        if (error) {
+            return res.status(500).json({ message: error });
         }
         return res.status(200).json({ message: 'Message marked as read' });
     });
 });
+
+app.patch('/message/:id', (req, res) => {
+    const id = req.params.id
+    pool.query('UPDATE messages SET sale_agreed = TRUE WHERE id = $1', [id], (error, result) => {
+        if(error) {
+            return res.status(500).json({message: error})
+        }
+        return res.status(200).json({message: 'Sale agreed'})
+    })
+})
 
 
 app.get('/products', (req, res) => {

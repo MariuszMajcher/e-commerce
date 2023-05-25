@@ -9,6 +9,7 @@ const SendMessage = () => {
   const [email, setEmail] = useState('')
   const user = useSelector(selectUser)
 
+  // it handles sending messages without the need of a cat, can be used to send a question to other user
   const handleSubmit = (e) => {
     fetch(`http://localhost:3000/messages/${email}`, {
     method: 'POST',

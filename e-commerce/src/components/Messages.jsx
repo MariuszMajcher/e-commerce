@@ -24,23 +24,23 @@ const Messages = () => {
           state= {{ message: message }}
           className = {message.message_read ? "read" : "unread"}
           key={message.id}
-          // onClick={() => {
-          //   if (!message.message_read) {
-          //     fetch(`http://localhost:3000/messages/${message.id}`, {
-          //       method: 'PATCH',
-          //       headers: {
-          //         'Content-Type': 'application/json'
-          //       },
-          //       body: JSON.stringify({
-          //         read: true
-          //       })
-          //     })
-          //     .then(response => response.json())
-          //     .then(data => {
-          //       dispatch(loadCurrentMessage(data.message));
-          //     });
-          //   }
-          // }}
+          onClick={() => {
+            if (!message.message_read) {
+              fetch(`http://localhost:3000/messages/${message.id}`, {
+                method: 'PATCH',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                  read: true
+                })
+              })
+              .then(response => response.json())
+              .then(data => {
+                dispatch(loadCurrentMessage(data.message));
+              });
+            }
+          }}
         >
           {message.date_of_message} <br /> {message.sender_name}
         </Link>

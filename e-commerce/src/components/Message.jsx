@@ -2,6 +2,7 @@ import { useLocation, useNavigate } from "react-router-dom"
 import { useSelector, useDispatch } from "react-redux"
 import { selectUser } from "../store/userSlice"
 import { loadCurrentMessage } from "../store/currentMessageSlice"
+import { loadAllMessages } from "../store/messagesSlice"
 import { useEffect, useState } from "react"
 import { selectCurrentMessage } from "../store/currentMessageSlice"
 import '../styling/Message.css'
@@ -13,33 +14,33 @@ const Message = () => {
     const [send, setSend] = useState(false)
     const [catOwnerId, setCatOwnerId] = useState()
     const [isOwner, setIsOwner] = useState(false)
-    // here will create another state that will hold the bool of the table information,
-    // this will allow the user to see the button
  
     const user = useSelector(selectUser)
     const { state } = useLocation()
-
-    dispatch(loadCurrentMessage(state.message))
+   
     const navigate = useNavigate()
     let message
 
-  
     const openedMessage = useSelector(selectCurrentMessage)
 
-
-    if (state === null) {
-      message = openedMessage
-    } else {
+      // looks like it crashes when the link is not clicked, is trying to acces state value, need to make it so it loads state 
+    // only if the link is clicked
+    if(state) {
       message = state.message
+      dispatch(loadCurrentMessage(state.message))
+    } else {
+      message = openedMessage
     }
 
+    const agreed = openedMessage.sale_agreed
+
+    // This is just a fetch that loads the cats owner id, later it is used for the isOwner check
     useEffect(() => {
       const fetchData = async () => {
         try {
           if(openedMessage.cat_id) {
             const res = await fetch(`http://localhost:3000/cat/${openedMessage.cat_id}`)
             const data = await res.json()
-              console.log(data)
              return setCatOwnerId(data.id.user_id)
           }
         } catch (error) {
@@ -50,24 +51,30 @@ const Message = () => {
      fetchData()
     }, [openedMessage])
 
-    console.log(isOwner)
     useEffect(() => {
       setIsOwner(openedMessage.receiver_id === catOwnerId)
     }, [catOwnerId])
     
-    // it might be better to hold a column that is boolean that would hold a special kind of state, 
-    // if the owner agrees to the sale he will click handleAgree, this will be  a patch request
-    // will just update the column. And based on that, the user that has in his messages 
-    // a message that has this bool set to true, will have a button displayed with the Stripe payement
-    // the value that will be passed will be the one agreed by poth parties
+  //  this sends an update to the messages table, it changes value of sale_agreed to true
     const handleAgree = () => {
         fetch(`http://localhost:3000/message/${openedMessage.id}`, {
           method: 'PATCH',
-          'Content-type': 'application/json'
+          headers: {
+            'Content-type': 'application/json'
+          },
+          body: JSON.stringify({
+            message: openedMessage
+          })
         })
         .then(res => res.json())
-        .then(data => console.log(data.message))
+        .then(data => 
+          dispatch(loadAllMessages(data))
+          )
+        .catch(err => console.log(err))
+        .finally(navigate('/messages'))
     }
+    // Now will need to create a pay button functionality using Stripe, every other way of sending messages seems to be working well
+    
 
   const handleSubmit = () => {
       fetch(`http://localhost:3000/cats-shop/${message.cat_id}`, {
@@ -91,6 +98,12 @@ const Message = () => {
         });
   }
 
+  // WOULD BE GOOD TO HOLD SEPARATLY TWO MESSAGE STATES, RECEIVED AND SENT
+  // MAYBE EVEN TURN IT IN TO A SINGLE MESSAGING SYSTEM THAT WOULD UPDATE STRAIGHT AFTER SEND
+  // BOTH SIDES COULD UPDATE THEIR MESSAGE STATE USING A EVENT HANDLER
+
+ 
+
   const handleDelete = () => {
     fetch(`http://localhost:3000/cats-shop/${message.id}`, {
       method: 'DELETE'
@@ -106,6 +119,8 @@ const Message = () => {
     return <h1>Loading...</h1>
   }
 
+
+  // THE PAY BUTTON DISPLAYS PROPERLY
   return (
     <div className="message-container">
         <h1>{openedMessage.message}</h1>
@@ -119,12 +134,12 @@ const Message = () => {
                   <button type="submit">Send</button>
                 </form> : null}
         <button onClick={handleDelete}>Delete message</button>
-         {isOwner && <button onClick={handleAgree}>Agree!</button>} 
+        {/* will display if owner that has not yet agreed */}
+         {isOwner && !agreed && <button onClick={handleAgree}>Agree!</button>} 
+         {/* has to display only for not owners, that did not yet agree to the sale */}
+         {agreed && !isOwner &&  <button onClick={() => console.log('Sold')}>Pay</button>}
     </div>
   )
 }
 
 export default Message
-
-// If the message have a cat_id and the cat_id will corespond to the user_id the message will have a componnent agree to sale, 
-// this will send a message with a button to carry on with the payement using stripe

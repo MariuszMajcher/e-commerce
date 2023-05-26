@@ -15,7 +15,8 @@ const Messages = () => {
     const messages = useSelector(selectMessages);
     const dispatch = useDispatch()
     
-    console.log(messages)
+    // Creates an array of Links for messages, passes on the messages that are selected from the slice, 
+    // if the message component rerenders the current message information will update from the already used slice
     const messageBoxes = messages.map((message) => {
       return (
        
@@ -27,13 +28,8 @@ const Messages = () => {
           onClick={() => {
             if (!message.message_read) {
               fetch(`http://localhost:3000/messages/${message.id}`, {
-                method: 'PATCH',
-                headers: {
-                  'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                  read: true
-                })
+                method: 'PATCH'
+
               })
               .then(response => response.json())
               .then(data => {

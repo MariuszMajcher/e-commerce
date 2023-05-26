@@ -263,13 +263,34 @@ app.patch('/messages/:id', (req, res) => {
 
 app.patch('/message/:id', (req, res) => {
     const id = req.params.id
-    pool.query('UPDATE messages SET sale_agreed = TRUE WHERE id = $1', [id], (error, result) => {
+    const date = new Date()
+    const {  sender_id,  sender_name, sender_surname, receiver_id, cat_id, asked_price} = req.body.message
+    const sale_agreed = true
+    const message = 'Sale agreed please click on the link to continue with the payement'
+    // now the sender will become receiver and receiver the sender
+    pool.query('INSERT INTO messages (sender_id, sender_name, sender_surname, receiver_id, cat_id, asked_price, date_of_message, sale_agreed, message) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)', [receiver_id,  sender_name, sender_surname, sender_id, cat_id, asked_price, date, sale_agreed, message],
+    (error, result) => {
         if(error) {
-            return res.status(500).json({message: error})
+            console.log(error)
         }
-        return res.status(200).json({message: 'Sale agreed'})
+        // // need to change the bool of sale_agreed separatly (possibly would not work if would try to assign a value)
+        // pool.query('UPDATE message')
+            pool.query('UPDATE messages SET sale_agreed = TRUE WHERE id = $1', [id], (error, result) => {
+                if(error) {
+                    return res.status(500).json({message: error})
+                }
+                pool.query('SELECT * FROM messages WHERE sender_id = $1', [sender_id], (error, results) => {
+                    if (error) {
+                      console.log(error);
+                      return res.status(500).json({ message: error });
+                    }
+                    res.status(200).send(results.rows);
+                  });
+            })
     })
 })
+
+// Might need to create a middelware that will do an message update each time the request from client is sent
 
 
 app.get('/products', (req, res) => {
@@ -304,13 +325,14 @@ app.post('/cats-shop/:id', (req, res) => {
     const { ownerId, message, price, sender, senderName, senderSurname, senderEmail } = req.body;
     const catId = req.params.id;
     const date = new Date();
+  
     pool.query('INSERT INTO messages (receiver_id, cat_id, message, asked_price, date_of_message, sender_id, sender_name, sender_surname, sender_email) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)', [ownerId, catId, message, price, date, sender, senderName, senderSurname, senderEmail], (err, result) => {
-        if (err) {
-            return res.status(500).json({ message: err });
-        }
-        return res.status(201).json({ message: 'Message sent successfully' });
+      if (err) {
+        return res.status(500).json({ message: err });
+      }
+      return res.status(200).json({message: 'Message sent'})
     });
-});
+  });
 
     // WILL NEED TO REPLACE GENERIC ERRORS WITH MORE ADEQUATE ONES
 app.delete('/cats-shop/:id', (req, res) => {

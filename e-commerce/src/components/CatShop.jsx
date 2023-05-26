@@ -21,6 +21,7 @@ const CatShop = () => {
     setBreeds(allCats.cats)
   }, []);
 
+  // Fetches the data from DB of cats that are for sale and updates the cats state, this is used for the map func
   useEffect(() => {
     const fetchCats = async () => {
       try {

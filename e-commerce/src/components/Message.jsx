@@ -105,7 +105,7 @@ const Message = () => {
  
 
   const handleDelete = () => {
-    fetch(`http://localhost:3000/cats-shop/${message.id}`, {
+    fetch(`https://localhost:3000/cats-shop/${message.id}`, {
       method: 'DELETE'
     })
   .then(res => res.json())

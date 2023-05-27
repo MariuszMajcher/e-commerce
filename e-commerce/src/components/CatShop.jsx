@@ -25,7 +25,7 @@ const CatShop = () => {
   useEffect(() => {
     const fetchCats = async () => {
       try {
-        const response = await fetch('http://localhost:3000/cats-shop');
+        const response = await fetch('https://localhost:3000/cats-shop');
         const data = await response.json();
         setCats(data);
       } catch (error) {

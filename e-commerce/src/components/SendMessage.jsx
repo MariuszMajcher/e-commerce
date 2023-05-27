@@ -11,7 +11,7 @@ const SendMessage = () => {
 
   // it handles sending messages without the need of a cat, can be used to send a question to other user
   const handleSubmit = (e) => {
-    fetch(`http://localhost:3000/messages/${email}`, {
+    fetch(`https://localhost:3000/messages/${email}`, {
     method: 'POST',
     headers: {
         'Content-type': 'application/json'

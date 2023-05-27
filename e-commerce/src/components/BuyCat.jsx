@@ -31,7 +31,7 @@ const BuyCat = () => {
   const handleSubmit = (e) => {
     e.preventDefault()
     // send a request to the owner
-    fetch(`http://localhost:3000/cats-shop/${buyingCat.id}`, {
+    fetch(`https://localhost:3000/cats-shop/${buyingCat.id}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

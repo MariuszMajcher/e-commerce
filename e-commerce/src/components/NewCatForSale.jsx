@@ -83,7 +83,7 @@ const NewCatForSale = () => {
       console.log(date, DoB)
       
       // if user is logged in, send the data to the server
-      fetch('http://localhost:3000/sell-cat', {
+      fetch('https://localhost:3000/sell-cat', {
           method: 'POST',
           body: formData
       })
@@ -136,7 +136,6 @@ const NewCatForSale = () => {
           <input type="text" name="name" value={name} placeholder="Cats name" onChange={handleChange} required/>
           {/* AGE WILL BE SET BY CHECKING THE DOB */}
           <input type="date"  name="DoB" value={DoB} placeholder="DoB of your cat" onChange={handleChange} required/>
-        {/* AFTER CHANGING THE AGE TO DATE THE REQUEST DOES NOT PASS */}
           <input type="number" name="price"  value={price} placeholder="Price" onChange={handleChange} required/>
           <select name="breedId" value={breed} onChange={handleChange} required>
             <option value="Select a Breed"  aria-hidden="true">Select a breed</option>
@@ -150,7 +149,6 @@ const NewCatForSale = () => {
             <input type="radio" name="gender" id="female" value="female"  onClick={() => setGender("female")} required />
           Female</label>
           </div>
-          {/* experimenting with the importing images */}
           <div className="image-prev">
             {imagePreview && <img src={imagePreview} alt="Selected Image Preview" />}
           </div>
@@ -162,5 +160,3 @@ const NewCatForSale = () => {
 }
 
 export default NewCatForSale
-
-// the breedID is throwing an error, it's not being set to the correct value

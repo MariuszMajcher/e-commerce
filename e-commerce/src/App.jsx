@@ -4,6 +4,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { loadCats, clearCats } from './store/catsSlice';
 import { useEffect } from 'react';
 import { selectLoggedIn } from './store/userSlice';
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
+
+const stripePromise = loadStripe('pk_test_51NCFU5J7Crgvv5hLaebFS8Yvcv6Ijr6yceyM1DJuMCIBtXmofJLtXJNjo9ca3sxw2npwIJVIXGqSIYlqN2mRM7Eg00fNiWh6d3')
 
 import NewUser from './components/NewUser';
 import Login from './components/Login';
@@ -15,6 +19,7 @@ import BuyCat from './components/BuyCat';
 import Messages from './components/Messages';
 import Message from './components/Message';
 import Logout from './components/Logout'
+import PaymentForm from './components/PayementForm';
 
 
 function App() {
@@ -63,6 +68,9 @@ function App() {
           <Route path="/cats-shop/:id" element={<BuyCat />} />
           <Route path="/messages" element={<Messages />} />
           <Route path="/messages/:id" element={<Message />} />
+          <Route path="/payment" element={  <Elements stripe={stripePromise}>
+                                              <PaymentForm />
+                                            </Elements> } />
           
         </Routes>
           <Logout />

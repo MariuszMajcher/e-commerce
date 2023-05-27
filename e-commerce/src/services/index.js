@@ -7,6 +7,8 @@ import LocalStrategy from 'passport-local';
 import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
 import multer from 'multer';
+import https from 'https';
+import fs from 'fs';
 
 const app = express();
 app.set('view engine', 'ejs');
@@ -19,6 +21,10 @@ const dbPassword = process.env.PASSWORD;
 const dbName = process.env.NAME;
 const dbApiSecret = process.env.API_SECRET;
 const port = process.env.SERVER_PORT || 3000;
+const privateKey = fs.readFileSync('private.key', 'utf8');
+const certificate = fs.readFileSync('certificate.crt', 'utf8');
+
+const options = { key: privateKey, cert: certificate };
 
 const { Pool } = pg;
 
@@ -347,9 +353,8 @@ app.delete('/cats-shop/:id', (req, res) => {
     
 
 
-app.listen(port, () => {
-    console.log(`Example app listening at http://localhost:${port}`);
-    }
-)
+https.createServer(options, app).listen(port, () => {
+    console.log(`Example app listening at https://localhost:${port}`);
+  });
 
 // Will need to separate routers

@@ -28,7 +28,7 @@ function App() {
   
 
   const loadAllCats = () => {
-    fetch('http://localhost:3000/cats')
+    fetch('https://localhost:3000/cats')
       .then((res) => res.json())
       .then((data) => {
         let catsArray = [];

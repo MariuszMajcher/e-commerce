@@ -21,8 +21,8 @@ const dbPassword = process.env.PASSWORD;
 const dbName = process.env.NAME;
 const dbApiSecret = process.env.API_SECRET;
 const port = process.env.SERVER_PORT || 3000;
-const privateKey = fs.readFileSync('private.key', 'utf8');
-const certificate = fs.readFileSync('certificate.crt', 'utf8');
+const privateKey = fs.readFileSync('localhost.key', 'utf8');
+const certificate = fs.readFileSync('localhost.crt', 'utf8');
 
 const options = { key: privateKey, cert: certificate };
 

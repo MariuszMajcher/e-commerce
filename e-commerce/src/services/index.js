@@ -337,11 +337,21 @@ app.post('/cats-shop/:id', (req, res) => {
     // WILL NEED TO REPLACE GENERIC ERRORS WITH MORE ADEQUATE ONES
 app.delete('/cats-shop/:id', (req, res) => {
     const id = req.params.id
+    const userId = req.body.id
     pool.query('DELETE FROM messages WHERE id = $1', [id], (err, result) => {
         if (err) {
             return res.status(500).json({message: err})
         }
-    return res.status(202).json({message: 'Message deleted sucessfuly'})
+        pool.query('SELECT * FROM messages WHERE id = $1',[userId], (error, result) => {
+            if(err) {
+                return res.status(500).json({message: err})
+            }
+            return res.status(202).json({
+                                        message: 'Message deleted sucessfuly',
+                                        data: result.rows    
+                                    })
+        })
+    
     })
 })
     

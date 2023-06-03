@@ -67,8 +67,9 @@ const Message = () => {
           })
         })
         .then(res => res.json())
-        .then(data => 
-          dispatch(loadAllMessages(data))
+        .then(data => {
+          console.log(data)
+          dispatch(loadAllMessages(data))}
           )
         .catch(err => console.log(err))
         .finally(navigate('/messages'))
@@ -106,11 +107,19 @@ const Message = () => {
 
   const handleDelete = () => {
     fetch(`http://localhost:3000/cats-shop/${message.id}`, {
-      method: 'DELETE'
+      method: 'DELETE',
+      headers: {
+        'Content-Type':'application/json'
+      },
+      body: JSON.stringify({
+        user: user.id
+      })
     })
   .then(res => res.json())
-  .then(data => { if(data.message === 'Message sucessfuly deleted') {
-    navigate('/messages')
+  .then(data => { 
+    if(data.message === 'Message deleted sucessfuly') {
+      dispatch(loadAllMessages(data.data))
+      navigate('/messages')
   }})
   }
 

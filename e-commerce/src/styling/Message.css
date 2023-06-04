@@ -5,3 +5,12 @@
     margin: 10px;
     background-color: #f4a261;
 }
+
+.buttons {
+    
+    display: grid;
+    gap: 10px;
+    background-color: rgb(211, 193, 145);
+    border-radius: 10px;
+    justify-content: center;
+}

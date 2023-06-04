@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from "react-router-dom"
+import { useLocation, useNavigate, Link } from "react-router-dom"
 import { useSelector, useDispatch } from "react-redux"
 import { selectUser } from "../store/userSlice"
 import { loadCurrentMessage } from "../store/currentMessageSlice"
@@ -136,17 +136,20 @@ const Message = () => {
         <h2>{openedMessage.price}</h2>
         <h3>{openedMessage.date}</h3>
         <h3>{openedMessage.sender_name} {openedMessage.sender_surname}</h3>
-        <button onClick={() => {setSend(prev => !prev)}}>Write back</button>
-        {send ? <form onSubmit={handleSubmit}>
-                  <button onClick={() => setSend(false)}>X</button>
-                  <textarea onChange={(e) => setMessageBack(e.target.value)} value={messageBack}></textarea>
-                  <button type="submit">Send</button>
-                </form> : null}
-        <button onClick={handleDelete}>Delete message</button>
-        {/* will display if owner that has not yet agreed */}
-         {isOwner && !agreed && <button onClick={handleAgree}>Agree!</button>} 
-         {/* has to display only for not owners, that did not yet agree to the sale */}
-         {agreed && !isOwner &&  <button onClick={() => console.log('Sold')}>Pay</button>}
+        <div className="buttons">
+          <button onClick={() => {setSend(prev => !prev)}}>Write back</button>
+          {send ? <form onSubmit={handleSubmit}>
+                    <button onClick={() => setSend(false)}>X</button>
+                    <textarea onChange={(e) => setMessageBack(e.target.value)} value={messageBack}></textarea>
+                    <button type="submit">Send</button>
+                  </form> : null}
+          <button onClick={handleDelete}>Delete message</button>
+          {/* will display if owner that has not yet agreed */}
+          {isOwner && !agreed && <button onClick={handleAgree}>Agree!</button>} 
+          {/* has to display only for not owners, that did not yet agree to the sale */}
+          {agreed && !isOwner &&  <button onClick={() => console.log('Sold')}>Pay</button>}
+          <Link to='/messages'>Back</Link>
+        </div>
     </div>
   )
 }

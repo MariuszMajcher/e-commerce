@@ -4,12 +4,13 @@
     padding: 10px;
     margin: 10px;
     background-color: #f4a261;
+
 }
 
 .buttons {
     
     display: grid;
-    gap: 10px;
+    gap: 15px;
     background-color: rgb(211, 193, 145);
     border-radius: 10px;
     justify-content: center;

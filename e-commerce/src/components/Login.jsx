@@ -4,6 +4,7 @@ import { logIn, loadUser, setUserExists } from '../store/userSlice'
 import {  selectUserExists} from '../store/userSlice'
 import { loadAllMessages } from '../store/messagesSlice'
 import { useNavigate } from 'react-router-dom'
+import '../styling/Login.css'
 
 const Login = () => {
 
@@ -12,6 +13,8 @@ const Login = () => {
   const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [tries, setTries] = useState(0)
+
 
   useEffect(() => {
     setTimeout(() => {
@@ -19,7 +22,6 @@ const Login = () => {
     }, 3000)
   }, [userExists])
 
-  // login will have a 3 times try, a state that will hold number of wrong tries
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -38,16 +40,24 @@ const Login = () => {
         .then(res => res.json())
         .then(data => { 
         if(data.message == 'unauthorized') {
+          // setTries(prev => prev ++) 
+          setTries(tries+1)
+
+          console.log(tries)
+
+          if(tries >= 3) {
             navigate('/new-user')
             return false
-        } 
+          } 
+        } else {
         const { messages, ...userData } = data
         dispatch(logIn())
         dispatch(loadAllMessages(messages))
         console.log(userData)
         dispatch(loadUser(userData))
         navigate('/sell-cat')
-        })
+        }})
+
     .catch(err => console.log(err))
     }
 
@@ -65,6 +75,7 @@ const Login = () => {
       {userExists ? <h2>Sorry, that user already exists</h2> : null}
         <form onSubmit={handleSubmit}>
             <h2>Log in please</h2>
+            {tries > 0 ? <h2 className='tries'>You got {4-tries} remaining!</h2> : null}
             <input 
             onChange={handleChange} 
             name='email'
@@ -84,8 +95,3 @@ const Login = () => {
 }
 
 export default Login
-
-// IMPORTANT:
-/*NEED TO MAKE SURE THAT AFTER LOGIN ALL APART OF PASSWORD IS BEING STORED IN LS */
-// upon login the messages will be loaded that correspond to the user
-// this will be done using the same fetch request 

@@ -390,3 +390,11 @@ app.listen(port, () => {
   });
 
 // Will need to separate routers
+// IN the payement route, will need to add the functionality of changing the state in db, for the cat to have the sold date, will need to change the 
+// amount of monies to be acurate to what the both parties agreed to, and after all that need to redirect ( will have to check other funcs
+// there might be some that need to redirect)
+
+// AFTER THE ABOVE IS DONE 
+// will separate the routers and funcions to look more profesional
+// AFTER THIS
+// will start styling it and figuring out how

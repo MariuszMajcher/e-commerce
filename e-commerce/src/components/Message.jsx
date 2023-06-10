@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from "react-router-dom"
+import { useLocation, useNavigate, Link } from "react-router-dom"
 import { useSelector, useDispatch } from "react-redux"
 import { selectUser } from "../store/userSlice"
 import { loadCurrentMessage } from "../store/currentMessageSlice"
@@ -6,6 +6,14 @@ import { loadAllMessages } from "../store/messagesSlice"
 import { useEffect, useState } from "react"
 import { selectCurrentMessage } from "../store/currentMessageSlice"
 import '../styling/Message.css'
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
+
+
+
+const stripePromise = loadStripe('pk_test_51NCFU5J7Crgvv5hLaebFS8Yvcv6Ijr6yceyM1DJuMCIBtXmofJLtXJNjo9ca3sxw2npwIJVIXGqSIYlqN2mRM7Eg00fNiWh6d3');
+
+import Stripe from './Stripe'
 
 const Message = () => {
 
@@ -14,6 +22,7 @@ const Message = () => {
     const [send, setSend] = useState(false)
     const [catOwnerId, setCatOwnerId] = useState()
     const [isOwner, setIsOwner] = useState(false)
+    const [payement, setPayement] = useState(false)
  
     const user = useSelector(selectUser)
     const { state } = useLocation()
@@ -67,8 +76,9 @@ const Message = () => {
           })
         })
         .then(res => res.json())
-        .then(data => 
-          dispatch(loadAllMessages(data))
+        .then(data => {
+          console.log(data)
+          dispatch(loadAllMessages(data))}
           )
         .catch(err => console.log(err))
         .finally(navigate('/messages'))
@@ -98,19 +108,26 @@ const Message = () => {
         });
   }
 
-  // WOULD BE GOOD TO HOLD SEPARATLY TWO MESSAGE STATES, RECEIVED AND SENT
-  // MAYBE EVEN TURN IT IN TO A SINGLE MESSAGING SYSTEM THAT WOULD UPDATE STRAIGHT AFTER SEND
-  // BOTH SIDES COULD UPDATE THEIR MESSAGE STATE USING A EVENT HANDLER
-
- 
+  const handlePay = () => {
+    setPayement(prev => !prev)
+  }
+  
 
   const handleDelete = () => {
-    fetch(`https://localhost:3000/cats-shop/${message.id}`, {
-      method: 'DELETE'
+    fetch(`http://localhost:3000/cats-shop/${message.id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type':'application/json'
+      },
+      body: JSON.stringify({
+        user: user.id
+      })
     })
   .then(res => res.json())
-  .then(data => { if(data.message === 'Message sucessfuly deleted') {
-    navigate('/messages')
+  .then(data => { 
+    if(data.message === 'Message deleted sucessfuly') {
+      dispatch(loadAllMessages(data.data))
+      navigate('/messages')
   }})
   }
 
@@ -123,21 +140,29 @@ const Message = () => {
   // THE PAY BUTTON DISPLAYS PROPERLY
   return (
     <div className="message-container">
+      <div className={payement ? "blurred": ""}></div>
         <h1>{openedMessage.message}</h1>
         <h2>{openedMessage.price}</h2>
         <h3>{openedMessage.date}</h3>
         <h3>{openedMessage.sender_name} {openedMessage.sender_surname}</h3>
-        <button onClick={() => {setSend(prev => !prev)}}>Write back</button>
-        {send ? <form onSubmit={handleSubmit}>
-                  <button onClick={() => setSend(false)}>X</button>
-                  <textarea onChange={(e) => setMessageBack(e.target.value)} value={messageBack}></textarea>
-                  <button type="submit">Send</button>
-                </form> : null}
-        <button onClick={handleDelete}>Delete message</button>
-        {/* will display if owner that has not yet agreed */}
-         {isOwner && !agreed && <button onClick={handleAgree}>Agree!</button>} 
-         {/* has to display only for not owners, that did not yet agree to the sale */}
-         {agreed && !isOwner &&  <button onClick={() => console.log('Sold')}>Pay</button>}
+        <div className="buttons">
+          <button onClick={() => {setSend(prev => !prev)}}>Write back</button>
+          {send ? <form onSubmit={handleSubmit}>
+                    <button onClick={() => setSend(false)}>X</button>
+                    <textarea onChange={(e) => setMessageBack(e.target.value)} value={messageBack}></textarea>
+                    <button type="submit">Send</button>
+                  </form> : null}
+          <button onClick={handleDelete}>Delete message</button>
+          {/* will display if owner that has not yet agreed */}
+          {isOwner && !agreed && <button onClick={handleAgree}>Agree!</button>} 
+          {/* has to display only for not owners, that did not yet agree to the sale */}
+          {agreed && !isOwner &&  <button onClick={handlePay}>Pay</button>}
+          {/* FOR STYLING PURPOSES AFTER CLICKING THE PAY BUTTON THE STRIPE FORM WILL COME OUT AND THE BACKGROUND WILL SLOWLY FADE AWAY */}
+          {payement && <Elements stripe={stripePromise}>
+            <Stripe className="stripe"/>
+          </Elements>}
+          <Link to='/messages'>Back</Link>
+        </div>
     </div>
   )
 }

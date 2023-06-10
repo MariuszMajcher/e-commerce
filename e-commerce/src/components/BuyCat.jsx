@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-// will pass on the information about the cat and its owner, to be able to send a request to the owner
 import { useSelector } from 'react-redux'
 import { selectBuyingCat } from '../store/buyingCatSlice'
 import { selectUser } from '../store/userSlice'
@@ -31,7 +30,7 @@ const BuyCat = () => {
   const handleSubmit = (e) => {
     e.preventDefault()
     // send a request to the owner
-    fetch(`https://localhost:3000/cats-shop/${buyingCat.id}`, {
+    fetch(`http://localhost:3000/cats-shop/${buyingCat.id}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -69,5 +68,5 @@ const BuyCat = () => {
 export default BuyCat
 
 // WILL NEED TO ADD A SERVER REQUEST TO GET THE REQUESTS FROM THE DATABASE
-// AND CHANGE THE TABLE OF OWENERS
+// AND CHANGE THE TABLE OF OWNERS
 // WILL NEED TO ADD A COLUMN TO THE OWNER TABLE, CALLED MONEY, THIS WILL BE THE MONEY THE OWNER HAS MADE FROM SELLING CATS

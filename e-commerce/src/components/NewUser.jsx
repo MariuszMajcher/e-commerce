@@ -71,7 +71,7 @@ const NewUser = () => {
 
     const handleSubmit = (e) => {
        e.preventDefault()
-        fetch('https://localhost:3000/new-user', {
+        fetch('http://localhost:3000/new-user', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

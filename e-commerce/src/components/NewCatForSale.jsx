@@ -83,7 +83,7 @@ const NewCatForSale = () => {
       console.log(date, DoB)
       
       // if user is logged in, send the data to the server
-      fetch('https://localhost:3000/sell-cat', {
+      fetch('http://localhost:3000/sell-cat', {
           method: 'POST',
           body: formData
       })

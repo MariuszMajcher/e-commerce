@@ -27,7 +27,7 @@ const Messages = () => {
           key={message.id}
           onClick={() => {
             if (!message.message_read) {
-              fetch(`https://localhost:3000/messages/${message.id}`, {
+              fetch(`http://localhost:3000/messages/${message.id}`, {
                 method: 'PATCH'
 
               })

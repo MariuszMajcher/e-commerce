@@ -12,7 +12,7 @@ const Profile = () => {
   const user = useSelector(selectUser)
 
   useEffect(() => {
-    fetch(`https://localhost:3000/messages/${user.id}`)
+    fetch(`http://localhost:3000/messages/${user.id}`)
       .then(res => res.json())
       .then(data => {
         dispatch(loadAllMessages(data))

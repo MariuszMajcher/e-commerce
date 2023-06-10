@@ -4,4 +4,28 @@
     padding: 10px;
     margin: 10px;
     background-color: #f4a261;
+
+}
+
+.blurred {
+    position: absolute;
+    left:0;
+    right: 0;
+    top: 0;
+    bottom:0;
+    filter: blur(50px);
+    z-index: 1;
+}
+
+.buttons {
+    
+    display: grid;
+    gap: 15px;
+    background-color: rgb(211, 193, 145);
+    border-radius: 10px;
+    justify-content: center;
+}
+
+.stripe {
+    background-color: red;
 }

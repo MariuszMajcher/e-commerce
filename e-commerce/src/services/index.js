@@ -7,12 +7,17 @@ import LocalStrategy from 'passport-local';
 import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
 import multer from 'multer';
-import https from 'https';
-import fs from 'fs';
+
+
+
+import Stripe from 'stripe'
+
 
 const app = express();
 app.set('view engine', 'ejs');
 dotenv.config();
+
+const stripe = new Stripe('sk_test_51NCFU5J7Crgvv5hL9LtuRxkrazAhLSa6YG2D5Jg0W6PUhRJkcCrh6n3YHJAW3o6cHYy2osDhZNgVPjLzAklVZOrU00kbYxW1fK')
 
 const dbHost = process.env.HOST;
 const dbPort = process.env.PORT;
@@ -21,10 +26,8 @@ const dbPassword = process.env.PASSWORD;
 const dbName = process.env.NAME;
 const dbApiSecret = process.env.API_SECRET;
 const port = process.env.SERVER_PORT || 3000;
-const privateKey = fs.readFileSync('localhost.key', 'utf8');
-const certificate = fs.readFileSync('localhost.crt', 'utf8');
 
-const options = { key: privateKey, cert: certificate };
+
 
 const { Pool } = pg;
 
@@ -343,18 +346,47 @@ app.post('/cats-shop/:id', (req, res) => {
     // WILL NEED TO REPLACE GENERIC ERRORS WITH MORE ADEQUATE ONES
 app.delete('/cats-shop/:id', (req, res) => {
     const id = req.params.id
+    const userId = req.body.id
     pool.query('DELETE FROM messages WHERE id = $1', [id], (err, result) => {
         if (err) {
             return res.status(500).json({message: err})
         }
-    return res.status(202).json({message: 'Message deleted sucessfuly'})
+        pool.query('SELECT * FROM messages WHERE id = $1',[userId], (error, result) => {
+            if(err) {
+                return res.status(500).json({message: err})
+            }
+            return res.status(202).json({
+                                        message: 'Message deleted sucessfuly',
+                                        data: result.rows    
+                                    })
+        })
+    
     })
 })
+
+// PAYMENT
+app.post('/api/create-payment-intent', async (req, res) => {
+    const { amount } = req.body;
+  
+    try {
+      // Create a PaymentIntent object
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount,
+        currency: 'usd', // Adjust the currency as per your requirements
+      });
+  
+      // Return the client secret to the client-side
+      res.json({ clientSecret: paymentIntent.client_secret });
+    } catch (error) {
+      console.error('Error creating PaymentIntent:', error.message);
+      res.status(500).json({ error: 'Failed to create PaymentIntent' });
+    }
+  });
     
 
 
-https.createServer(options, app).listen(port, () => {
-    console.log(`Example app listening at https://localhost:${port}`);
+app.listen(port, () => {
+    console.log(`Example app listening at http://localhost:${port}`);
   });
 
 // Will need to separate routers

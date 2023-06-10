@@ -1,0 +1,15 @@
+form.stripe{
+    position:relative;
+    z-index: 10;
+    background-color: rgb(155, 210, 219);
+    display: grid;
+}
+
+.card-element {
+    display: block;
+    width: 500px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 10px;
+  }

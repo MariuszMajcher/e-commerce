@@ -7,10 +7,13 @@ import LocalStrategy from 'passport-local';
 import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
 import multer from 'multer';
+import Stripe from 'stripe'
 
 const app = express();
 app.set('view engine', 'ejs');
 dotenv.config();
+
+const stripe = new Stripe('sk_test_51NCFU5J7Crgvv5hL9LtuRxkrazAhLSa6YG2D5Jg0W6PUhRJkcCrh6n3YHJAW3o6cHYy2osDhZNgVPjLzAklVZOrU00kbYxW1fK')
 
 const dbHost = process.env.HOST;
 const dbPort = process.env.PORT;
@@ -354,6 +357,25 @@ app.delete('/cats-shop/:id', (req, res) => {
     
     })
 })
+
+// PAYMENT
+app.post('/api/create-payment-intent', async (req, res) => {
+    const { amount } = req.body;
+  
+    try {
+      // Create a PaymentIntent object
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount,
+        currency: 'usd', // Adjust the currency as per your requirements
+      });
+  
+      // Return the client secret to the client-side
+      res.json({ clientSecret: paymentIntent.client_secret });
+    } catch (error) {
+      console.error('Error creating PaymentIntent:', error.message);
+      res.status(500).json({ error: 'Failed to create PaymentIntent' });
+    }
+  });
     
 
 

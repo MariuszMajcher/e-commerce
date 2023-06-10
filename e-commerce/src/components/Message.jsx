@@ -6,6 +6,14 @@ import { loadAllMessages } from "../store/messagesSlice"
 import { useEffect, useState } from "react"
 import { selectCurrentMessage } from "../store/currentMessageSlice"
 import '../styling/Message.css'
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
+
+
+
+const stripePromise = loadStripe('pk_test_51NCFU5J7Crgvv5hLaebFS8Yvcv6Ijr6yceyM1DJuMCIBtXmofJLtXJNjo9ca3sxw2npwIJVIXGqSIYlqN2mRM7Eg00fNiWh6d3');
+
+import Stripe from './Stripe'
 
 const Message = () => {
 
@@ -14,6 +22,7 @@ const Message = () => {
     const [send, setSend] = useState(false)
     const [catOwnerId, setCatOwnerId] = useState()
     const [isOwner, setIsOwner] = useState(false)
+    const [payement, setPayement] = useState(false)
  
     const user = useSelector(selectUser)
     const { state } = useLocation()
@@ -99,11 +108,10 @@ const Message = () => {
         });
   }
 
-  // WOULD BE GOOD TO HOLD SEPARATLY TWO MESSAGE STATES, RECEIVED AND SENT
-  // MAYBE EVEN TURN IT IN TO A SINGLE MESSAGING SYSTEM THAT WOULD UPDATE STRAIGHT AFTER SEND
-  // BOTH SIDES COULD UPDATE THEIR MESSAGE STATE USING A EVENT HANDLER
-
- 
+  const handlePay = () => {
+    setPayement(prev => !prev)
+  }
+  
 
   const handleDelete = () => {
     fetch(`http://localhost:3000/cats-shop/${message.id}`, {
@@ -132,6 +140,7 @@ const Message = () => {
   // THE PAY BUTTON DISPLAYS PROPERLY
   return (
     <div className="message-container">
+      <div className={payement ? "blurred": ""}></div>
         <h1>{openedMessage.message}</h1>
         <h2>{openedMessage.price}</h2>
         <h3>{openedMessage.date}</h3>
@@ -147,7 +156,11 @@ const Message = () => {
           {/* will display if owner that has not yet agreed */}
           {isOwner && !agreed && <button onClick={handleAgree}>Agree!</button>} 
           {/* has to display only for not owners, that did not yet agree to the sale */}
-          {agreed && !isOwner &&  <button onClick={() => console.log('Sold')}>Pay</button>}
+          {agreed && !isOwner &&  <button onClick={handlePay}>Pay</button>}
+          {/* FOR STYLING PURPOSES AFTER CLICKING THE PAY BUTTON THE STRIPE FORM WILL COME OUT AND THE BACKGROUND WILL SLOWLY FADE AWAY */}
+          {payement && <Elements stripe={stripePromise}>
+            <Stripe />
+          </Elements>}
           <Link to='/messages'>Back</Link>
         </div>
     </div>

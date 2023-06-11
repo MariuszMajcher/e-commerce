@@ -17,73 +17,70 @@ import Stripe from './Stripe'
 
 const Message = () => {
 
-    const dispatch = useDispatch()
-    const [messageBack, setMessageBack] = useState('')
-    const [send, setSend] = useState(false)
-    const [catOwnerId, setCatOwnerId] = useState()
-    const [isOwner, setIsOwner] = useState(false)
-    const [payement, setPayement] = useState(false)
- 
-    const user = useSelector(selectUser)
-    const { state } = useLocation()
-   
-    const navigate = useNavigate()
-    let message
+  const dispatch = useDispatch()
+  const [messageBack, setMessageBack] = useState('')
+  const [send, setSend] = useState(false)
+  const [catOwnerId, setCatOwnerId] = useState()
+  const [isOwner, setIsOwner] = useState(false)
+  const [payement, setPayement] = useState(false)
 
-    const openedMessage = useSelector(selectCurrentMessage)
+  const user = useSelector(selectUser)
+  const { state } = useLocation()
+  
+  const navigate = useNavigate()
+  let message
 
-      // looks like it crashes when the link is not clicked, is trying to acces state value, need to make it so it loads state 
-    // only if the link is clicked
-    if(state) {
-      message = state.message
-      dispatch(loadCurrentMessage(state.message))
-    } else {
-      message = openedMessage
-    }
+  const openedMessage = useSelector(selectCurrentMessage)
 
-    const agreed = openedMessage.sale_agreed
+  if(state) {
+    message = state.message
+    dispatch(loadCurrentMessage(state.message))
+  } else {
+    message = openedMessage
+  }
 
-    // This is just a fetch that loads the cats owner id, later it is used for the isOwner check
-    useEffect(() => {
-      const fetchData = async () => {
-        try {
-          if(openedMessage.cat_id) {
-            const res = await fetch(`http://localhost:3000/cat/${openedMessage.cat_id}`)
-            const data = await res.json()
-             return setCatOwnerId(data.id.user_id)
-          }
-        } catch (error) {
-          console.log(error)
+  const agreed = message.sale_agreed
+
+  // This is just a fetch that loads the cats owner id, later it is used for the isOwner check
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if(message.cat_id) {
+          const res = await fetch(`http://localhost:3000/cat/${message.cat_id}`)
+          const data = await res.json()
+            return setCatOwnerId(data.id.user_id)
         }
+      } catch (error) {
+        console.log(error)
       }
-      // Check if the user receiving message is the owner of the cat
-     fetchData()
-    }, [openedMessage])
+    }
+    // Check if the user receiving message is the owner of the cat
+    fetchData()
+  }, [openedMessage])
 
-    useEffect(() => {
-      setIsOwner(openedMessage.receiver_id === catOwnerId)
-    }, [catOwnerId])
+  useEffect(() => {
+    setIsOwner(message.receiver_id === catOwnerId)
+  }, [catOwnerId])
     
   //  this sends an update to the messages table, it changes value of sale_agreed to true
-    const handleAgree = () => {
-        fetch(`http://localhost:3000/message/${openedMessage.id}`, {
-          method: 'PATCH',
-          headers: {
-            'Content-type': 'application/json'
-          },
-          body: JSON.stringify({
-            message: openedMessage
-          })
+  const handleAgree = () => {
+      fetch(`http://localhost:3000/message/${message.id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-type': 'application/json'
+        },
+        body: JSON.stringify({
+          message: message
         })
-        .then(res => res.json())
-        .then(data => {
-          console.log(data)
-          dispatch(loadAllMessages(data))}
-          )
-        .catch(err => console.log(err))
-        .finally(navigate('/messages'))
-    }
-    // Now will need to create a pay button functionality using Stripe, every other way of sending messages seems to be working well
+      })
+      .then(res => res.json())
+      .then(data => {
+        console.log(data)
+        dispatch(loadAllMessages(data))}
+        )
+      .catch(err => console.log(err))
+      .finally(navigate('/messages'))
+  }
     
 
   const handleSubmit = () => {
@@ -141,10 +138,10 @@ const Message = () => {
   return (
     <div className="message-container">
       <div className={payement ? "blurred": ""}></div>
-        <h1>{openedMessage.message}</h1>
-        <h2>{openedMessage.price}</h2>
-        <h3>{openedMessage.date}</h3>
-        <h3>{openedMessage.sender_name} {openedMessage.sender_surname}</h3>
+        <h1>{message.message}</h1>
+        <h2>{message.price}</h2>
+        <h3>{message.date}</h3>
+        <h3>{message.sender_name} {message.sender_surname}</h3>
         <div className="buttons">
           <button onClick={() => {setSend(prev => !prev)}}>Write back</button>
           {send ? <form onSubmit={handleSubmit}>
@@ -159,7 +156,7 @@ const Message = () => {
           {agreed && !isOwner &&  <button onClick={handlePay}>Pay</button>}
           {/* FOR STYLING PURPOSES AFTER CLICKING THE PAY BUTTON THE STRIPE FORM WILL COME OUT AND THE BACKGROUND WILL SLOWLY FADE AWAY */}
           {payement && <Elements stripe={stripePromise}>
-            <Stripe className="stripe"/>
+            <Stripe className="stripe" message={message}/>
           </Elements>}
           <Link to='/messages'>Back</Link>
         </div>

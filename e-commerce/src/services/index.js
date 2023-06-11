@@ -351,7 +351,7 @@ app.delete('/cats-shop/:id', (req, res) => {
         if (err) {
             return res.status(500).json({message: err})
         }
-        pool.query('SELECT * FROM messages WHERE id = $1',[userId], (error, result) => {
+        pool.query('SELECT * FROM messages WHERE id = $1',[userId], (err, result) => {
             if(err) {
                 return res.status(500).json({message: err})
             }
@@ -364,11 +364,25 @@ app.delete('/cats-shop/:id', (req, res) => {
     })
 })
 
-// PAYMENT
+// PAYMENT 
+// There might be a problem with the return statement, at the moment there would be multiple ones, will need to make sure there is only one
+// after the payement is complete
+
 app.post('/api/create-payment-intent', async (req, res) => {
-    const { amount } = req.body;
-  
+    const { amount, cat_id, cat_owner } = req.body;
+    
+    const date = new Date()
+
     try {
+      // First will send the update to the database
+      pool.query('UPDATE cats_for_sale SET sold_date = $1 WHERE id = $2', [date, cat_id], (err, result) => {
+        if(err) {
+            return res.status(500).json({message: err})
+        }
+        return res.status(200).json({
+                                    message: 'Date updated'
+                                })
+      })   
       // Create a PaymentIntent object
       const paymentIntent = await stripe.paymentIntents.create({
         amount,

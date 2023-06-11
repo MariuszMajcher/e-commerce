@@ -6,7 +6,7 @@ import '../styling/Stripe.css'
 // Will need to finish doing the gradual change upon the pay button pressed
 
 
-const StripePaymentForm = () => {
+const StripePaymentForm = ({message}) => {
   const stripe = useStripe();
   const elements = useElements();
   const [errorMessage, setErrorMessage] = useState('');
@@ -30,7 +30,9 @@ const StripePaymentForm = () => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        amount: 1000, // Example: $10.00
+        amount: message.price * 100, 
+        cat_id: message.cat_id,
+        cat_owner: message.sender_id
       }),
     });
 

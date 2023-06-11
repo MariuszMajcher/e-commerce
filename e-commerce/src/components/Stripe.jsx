@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import '../styling/Stripe.css'
 
@@ -10,7 +11,12 @@ const StripePaymentForm = ({message}) => {
   const stripe = useStripe();
   const elements = useElements();
   const [errorMessage, setErrorMessage] = useState('');
-  const amount = 1000
+  const navigate = useNavigate()
+  
+
+
+  // after I have added the DB changing func, for messages and cats_for_sale, it started crashing 
+  // GET http://localhost:3000/messages/10 net::ERR_CONNECTION_REFUSED
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -20,7 +26,7 @@ const StripePaymentForm = ({message}) => {
     }
 
    
-
+    
     const cardElement = elements.getElement(CardElement);
 
     // Make an API call to your server to create a PaymentIntent or Charge object with the desired amount
@@ -30,9 +36,10 @@ const StripePaymentForm = ({message}) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        amount: message.price * 100, 
+        amount: message.asked_price * 100, 
         cat_id: message.cat_id,
-        cat_owner: message.sender_id
+        cat_owner: message.sender_id, 
+        buyer_id: message.id
       }),
     });
 
@@ -54,6 +61,7 @@ const StripePaymentForm = ({message}) => {
     // Payment confirmed successfully
     console.log(paymentIntent);
     setErrorMessage('');
+    navigate('/profile')
 
     // Process the payment or handle success/failure...
 

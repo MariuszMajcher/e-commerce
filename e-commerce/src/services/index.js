@@ -211,8 +211,8 @@ app.post('/sell-cat', upload.single('imageFile'), (req, res) => {
     // Convert the date value to the desired format (YYYY-MM-DD)
     const DoBConverted = DoB.split('-').reverse().join('-');
     const dobDate = new Date(DoBConverted);
-         
-    console.log(dobDate)
+    console.log(DoB)
+    // console.log(dobDate)
     pool.query('INSERT INTO cats_for_sale ( user_id, price, gender, date_of_birth, date_for_sale, breed_id, images_path, name) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)', [ userId, price, gender, DoB, date, breedId, imagePath, name], (err, result) => {
         if (err) {
             return res.status(500).json({ message: err });
@@ -365,30 +365,25 @@ app.delete('/cats-shop/:id', (req, res) => {
 })
 
 // PAYMENT 
-// There might be a problem with the return statement, at the moment there would be multiple ones, will need to make sure there is only one
-// after the payement is complete
-
 app.post('/api/create-payment-intent', async (req, res) => {
     const { amount, cat_id, cat_owner, buyer_id } = req.body;
-    let message
-    if(amount == 0) {
-        message = 'Your cat has been succesfully accepted to their new home, thank you for your donation!'
-    } else {
-        message = `Your cat has been succesfully sold for $${amount}. CONGRATULATIONS! `
-    }
-    
-    const date = new Date()
-    
+    const date = new Date();
+    console.log(buyer_id)
     try {
-      // First will send the update to the database
-      pool.query('UPDATE cats_for_sale SET sold_date = $1 WHERE id = $2', [date, cat_id], (err, result) => {
-        if(err) {
-            return res.status(500).json({message: err})
-        }
-      })
-    
+      // Update the sold_date in the cats_for_sale table
+      await pool.query('UPDATE cats_for_sale SET sold_date = $1 WHERE id = $2', [date, cat_id]);
+  
+      let message;
+      if (amount == 0) {
+        message = 'Your cat has been successfully accepted to their new home. Thank you for your donation!';
+      } else {
+        message = `Your cat has been successfully sold for $${amount}. Congratulations!`;
+      }
+  
+      // Insert a new message into the messages table
+      await pool.query('INSERT INTO messages (sender_id, receiver_id, cat_id, message, date_of_message) VALUES ($1, $2, $3, $4, $5)', [buyer_id, cat_owner, cat_id, message, date]);
+  
       // Create a PaymentIntent object
-      console.log(amount)
       const paymentIntent = await stripe.paymentIntents.create({
         amount: amount + 100,
         currency: 'usd'
@@ -400,12 +395,6 @@ app.post('/api/create-payment-intent', async (req, res) => {
       console.error('Error creating PaymentIntent:', error.message);
       res.status(500).json({ error: 'Failed to create PaymentIntent' });
     }
-    // Send a message to the seller that the sale has been a succes and the amount of monies recieved
-      pool.query('INSERT INTO messages (sender_id, receiver_id, cat_id, message, date_of_message) VALUES ($1, $2, $3, $4, $5)', [buyer_id, cat_owner, cat_id, message, date], (err, result) => {
-        if(err) {
-            res.status(500).json({message:err})
-        }
-      })   
   });
     
 
@@ -414,12 +403,4 @@ app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`);
   });
 
-// Will need to separate routers
-// IN the payement route, will need to add the functionality of changing the state in db, for the cat to have the sold date, will need to change the 
-// amount of monies to be acurate to what the both parties agreed to, and after all that need to redirect ( will have to check other funcs
-// there might be some that need to redirect)
-
-// AFTER THE ABOVE IS DONE 
-// will separate the routers and funcions to look more profesional
-// AFTER THIS
 // will start styling it and figuring out how

@@ -39,7 +39,7 @@ const StripePaymentForm = ({message}) => {
         amount: message.asked_price * 100, 
         cat_id: message.cat_id,
         cat_owner: message.sender_id, 
-        buyer_id: message.id
+        buyer_id: message.receiver_id
       }),
     });
 

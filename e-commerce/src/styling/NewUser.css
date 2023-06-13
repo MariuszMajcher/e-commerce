@@ -1,24 +1,26 @@
 .new-user {
     width: 70vw;
-    display: flex;
+    display: grid;
     align-items: center;
+    height: 99vh;
 }
 
+/* will make it so when the height is not enough the elements will be next to each other */
+
 .password-validation {
-    display: flex;
-    flex-direction: column;
+    display: grid;
     align-items: center;
     justify-content: center;
     margin-top: 10%;
     margin-bottom: 10%;
     width: 100%;
-    height: 200px;
     font-family: 'Courier New', Courier, monospace;
 }
 
 
 
 .invalid {
+    font-size: 0.9rem;
     color: rgb(190, 11, 80);
 }
 
@@ -36,9 +38,8 @@ form {
 
 form input {
     
-    height: 3vh;
+    height: 1rem;
     margin-bottom: 2%;
     border-radius: 5px;
-    border: 1px solid #ccc;
     padding: 1%;
 }

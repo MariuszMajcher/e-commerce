@@ -1,5 +1,4 @@
 #root {
-  
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
@@ -16,6 +15,7 @@ nav > a {
   margin: 0 1rem;
   color: #7b75ac;
   text-decoration: none;
-  font-size: 2rem;
+  font-size: 0.85rem;
+
 }
 

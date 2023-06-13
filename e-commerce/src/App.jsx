@@ -57,6 +57,7 @@ function App() {
         </nav>
         <Routes>
           <Route path="/cat-breeds" element={<CatBreeds />} />
+          <Route path='/' element={<NewUser />} />
           <Route path="/new-user" element={<NewUser />} />
           <Route path="/login" element={<Login />} />
           <Route path="/cats-shop" element={<CatShop />} />
@@ -66,7 +67,8 @@ function App() {
           <Route path="/messages" element={<Messages />} />
           <Route path="/messages/:id" element={<Message />} />
         </Routes>
-          <Logout />
+        {/* If not logged will not display */}
+          {logged && <Logout /> }
         
       </BrowserRouter>
    

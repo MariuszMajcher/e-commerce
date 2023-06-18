@@ -1,9 +1,9 @@
 # E-commerce
 ## A shop that would allow users to buy and seel cats
 
-##Spent few weekends on building this project, learned plenty, as in the last commit message, plenty room to improve the looks of the app
+## Spent few weekends on building this project, learned plenty, as in the last commit message, plenty room to improve the looks of the app
 
-##Things that have been done
+## Things that have been done
 1. Whole app done using React framework
 2. Server side done using node.js, express
 3. Some of the Libraries used
@@ -48,4 +48,4 @@
 - The table holding the cat breeds has been fetched from https://thecatapi.com/
 
 
-##Well that was fun, now on to do something more meaningfull!! :)
+## Well that was fun, now on to do something more meaningfull!! :)

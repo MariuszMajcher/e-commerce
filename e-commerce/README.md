@@ -1,5 +1,5 @@
-#E-commerce
-##A shop that would allow users to buy and seel cats
+# E-commerce
+## A shop that would allow users to buy and seel cats
 
 ##Spent few weekends on building this project, learned plenty, as in the last commit message, plenty room to improve the looks of the app
 

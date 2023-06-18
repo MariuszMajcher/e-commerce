@@ -2,7 +2,25 @@
     border: 1px solid #ccc;
     border-radius: 10px;
     padding: 20px;
-    background-color: darkgrey;
+    background-color: rgb(255, 222, 179);
     width: 300px;
     margin: 10px;
+    overflow: hidden;
+    white-space:pre-wrap;
+}
+
+h2 {
+    color: rgb(0, 33, 71);
+    font-size: 1rem;
+
+}
+
+h3 {
+    color:rgb(16, 54, 97);
+    font-size: 0.85rem;
+}
+
+p {
+    color:rgb(0, 33, 71);
+    font-size: 0.7rem;
 }

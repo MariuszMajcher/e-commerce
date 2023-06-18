@@ -1,8 +1,20 @@
 .cat-shop {
-    display: flex;
-    width: 80%;
-    overflow-x: scroll;
-    white-space: nowrap;
-    height: auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    justify-content: center;
+    width: 80vw;
+}
+
+@media  (max-width:1000px)  {
+    .cat-shop {
+        grid-template-columns: 1fr 1fr ;
+    }
+}
+
+@media (max-width:700px)  {
+    .cat-shop {
+        grid-template-columns: 1fr;
+        justify-items: center;
+    }
 }
 

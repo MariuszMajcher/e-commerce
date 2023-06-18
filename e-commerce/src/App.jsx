@@ -48,7 +48,7 @@ function App() {
   return (
     
       <BrowserRouter>
-        <nav>
+        <nav className='main-nav'>
           <Link to="/new-user">New User</Link>
           <Link to="/login">Login</Link>
           <Link to="/cats-shop">Cats Shop</Link>

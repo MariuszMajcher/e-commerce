@@ -49,3 +49,6 @@
 
 
 ## Well that was fun, now on to do something more meaningfull!! :)
+
+ps. There are few mistakes that I can`t be asked to fix, the amount of money should be passed on each time in the message, the amount of money paid and sent as a message after pay is static, should be using req.body instead
+

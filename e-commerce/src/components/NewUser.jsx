@@ -11,9 +11,9 @@ const NewUser = () => {
   const [passwordConfirmation, setPasswordConfirmation] = useState('')
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
-  const [favoriteBreed, setFavoriteBreed] = useState('')
   const [address, setAddress] = useState('')
-
+  const [filled, setFilled] = useState(false)
+ 
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
@@ -42,7 +42,6 @@ const NewUser = () => {
         password: setPassword,
         firstName: setFirstName,
         lastName: setLastName,
-        favoriteBreed: setFavoriteBreed,
         address: setAddress,
         passwordConfirmation: setPasswordConfirmation
     }
@@ -59,6 +58,11 @@ const NewUser = () => {
     } 
     if(e.target.name === 'email') {
         emailCheck.test(e.target.value) ? setValidEmail(true) : setValidEmail(false)
+    }
+    if(email && password && firstName && lastName && address && validPassword) {
+        setFilled(true)
+    } else {
+        setFilled(false)
     }
 
     console.log(password == passwordConfirmation)
@@ -81,7 +85,6 @@ const NewUser = () => {
                     password: password,
                     firstName: firstName,
                     lastName: lastName,
-                    favoriteBreed: favoriteBreed,
                     address: address
                     })
                 })
@@ -97,22 +100,22 @@ const NewUser = () => {
                 })
                 .catch(err => console.log(err))
     }
-
+    console.log(filled)
 
 
   return (
     <div className="new-user">
-        <form>
+        <form onSubmit={handleSubmit}>
             <h2>Sign up please</h2>
             <input value={email} onChange={handleChange} name="email" type="text" placeholder="Your email address or user name" required/>
             <input value={firstName} type="text" onChange={handleChange} name="firstName" placeholder="Your first name" required/>
             <input value={lastName} type="text" onChange={handleChange} name="lastName" placeholder="Your last name" required/>
-            <input value={favoriteBreed} type="text" onChange={handleChange} name="favoriteBreed" placeholder="Your favorite breed" required/>
             <input value={password} onChange={handleChange} type="password" name="password" placeholder="Your password" required/>
             <input value={passwordConfirmation} onChange={handleChange} type="password" name="passwordConfirmation" placeholder="Confirm your password" required/>
             <input value={address} onChange={handleChange} type="text" name="address" placeholder="Your address" required/>
 
-            <button onClick={handleSubmit}>Submit</button>
+            <button type='submit' disabled={!filled}>Submit</button>
+
         </form>
         <div className= "password-validation">
         {!invalidLength && <p className="invalid">Password must be at least 8 characters long</p>}
@@ -121,7 +124,7 @@ const NewUser = () => {
         {!number && <p className="invalid">Password must contain a number</p>}
         {!specialCharacter && <p className="invalid">Password must contain a special character</p>}
         {invalidCharacter && <p className="invalid">Password contains invalid characters</p> }
-        {validPassword && <p className="invalid">Passwords do not match</p>}
+        {!validPassword && <p className="invalid">Passwords do not match</p>}
         {!validEmail && <p className="invalid">Invalid email address</p>}
         </div>
     </div>

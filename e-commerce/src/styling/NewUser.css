@@ -1,13 +1,15 @@
 .new-user {
     width: 70vw;
-    display: grid;
-    align-items: center;
-    height: 99vh;
+    display: flex;
+    
+    
+    
 }
 
 /* will make it so when the height is not enough the elements will be next to each other */
 
 .password-validation {
+    position:relative;
     display: grid;
     align-items: center;
     justify-content: center;

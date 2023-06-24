@@ -5,6 +5,9 @@ import { useNavigate } from 'react-router-dom'
 import { selectLoggedIn, selectUser } from '../store/userSlice'
 import '../styling/NewCatForSale.css'
 
+import '@tensorflow/tfjs'
+import * as mobilenet from '@tensorflow-models/mobilenet'
+
 
 
 const NewCatForSale = () => {
@@ -17,6 +20,17 @@ const NewCatForSale = () => {
   const [price, setPrice] = useState(0)
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
+  const [isCat, setIsCat] = useState(false)
+  const [loaded, setLoaded] = useState(false)
+  const [goodToSell, setGoodToSell] = useState(false)
+ 
+  useEffect(() => {
+    if (name && DoB && breedId && breed && gender && price && imageFile && isCat) {
+      setGoodToSell(true)
+    } else {
+      setGoodToSell(false)
+    }
+  }, [name, DoB, breedId, breed, gender, price, imageFile, isCat])
   
   
   const navigate = useNavigate()
@@ -32,6 +46,21 @@ const NewCatForSale = () => {
 
   // user id
   const userId = useSelector(selectUser).id
+
+  const performCatImageRecognition = async (imageElement) => {
+    // Load the MobileNet model
+    const model = await mobilenet.load();
+    
+    // Get the predictions for the image
+    const predictions = await model.classify(imageElement);
+    
+    // Check if any of the predictions include "cat"
+    const isCatImage = predictions.some(prediction => prediction.className.includes('cat'));
+    
+    // Return the result
+    return isCatImage;
+  };
+  
  
   
   // array of options for the dropdown
@@ -39,17 +68,30 @@ const NewCatForSale = () => {
       return <option key={index} value={cat}>{cat}</option>
   })
 
-  const handleFileInputChange = (event) => {
+  const handleFileInputChange = async (event) => {
     const file = event.target.files[0];
-
+  
     // Use FileReader API to convert the selected file to a data URL
     const reader = new FileReader();
-    reader.onload = (e) => {
+    reader.onload = async (e) => {
       setImageFile(file);
       setImagePreview(e.target.result);
+  
+      // Create an image element to pass to the cat image recognition function
+      const imageElement = document.createElement('img');
+      imageElement.src = e.target.result;
+  
+      // Perform cat image recognition
+      const isCatImage = await performCatImageRecognition(imageElement);
+      setIsCat(isCatImage)
+      setLoaded(true)
+      console.log( isCat);
+  
+     
     };
     reader.readAsDataURL(file);
   };
+  
 
     const onSubmit = (e) => {
       e.preventDefault()
@@ -152,8 +194,9 @@ const NewCatForSale = () => {
           <div className="image-prev">
             {imagePreview && <img src={imagePreview} alt="Selected Image Preview" />}
           </div>
+          {!isCat && loaded && <div style={{ 'color': 'red'}}>The picture must be of a cat!</div>}
           <input type="file" accept="image/*" onChange={handleFileInputChange} required/> 
-          <button type="submit"> Sell Cat! </button>
+          <button type="submit" disabled={!goodToSell}> Sell Cat! </button>
       </form>
     </div>
   )

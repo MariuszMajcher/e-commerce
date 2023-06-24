@@ -7,7 +7,7 @@ import '../styling/CatItem.css'
 
 const CatItem = (props) => {
 
-  const { name, price, gender, date_of_birth, id, user_id, images_path, breed_id, date_for_sale } = props.cat
+  let { name, price, gender, date_of_birth, id, user_id, images_path, breed_id, date_for_sale } = props.cat
 
   const  dispatch = useDispatch()
   

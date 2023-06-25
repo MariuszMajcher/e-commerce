@@ -1,0 +1,30 @@
+.messages_container {
+    display: grid;
+    align-items: center;
+    justify-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.messages {
+    display: grid;
+    align-items: center;
+    justify-items: center;
+    justify-content: space-evenly;
+    gap: 0.5rem;
+    width: 20rem;
+}
+
+.message {
+    font-size: 0.7rem;
+    display: flex;
+    gap: 2rem;
+}
+
+.message:hover {
+    color: blue;
+}
+
+button {
+    width: 10rem;
+}

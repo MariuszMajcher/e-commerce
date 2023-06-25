@@ -5,7 +5,7 @@ import { useState } from "react"
 
 import { loadCurrentMessage } from "../store/currentMessageSlice"
 import SendMessage from "./SendMessage"
-
+import '../styling/Messages.css'
 
 
 
@@ -17,9 +17,22 @@ const Messages = () => {
     
     // Creates an array of Links for messages, passes on the messages that are selected from the slice, 
     // if the message component rerenders the current message information will update from the already used slice
+    
+    const options = {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    };
+    
+    
+   
+
     const messageBoxes = messages.map((message) => {
+      const new_date = new Date(message.date_of_message)
+
+      const formattedDate = new_date.toLocaleDateString(undefined, options);
       return (
-       
+        
         <Link
           to={`/messages/${message.id}`}
           state= {{ message: message }}
@@ -38,15 +51,20 @@ const Messages = () => {
             }
           }}
         >
-          {message.date_of_message} <br /> {message.sender_name}
+          <div className="message">
+            <div className="date">{formattedDate}</div>
+            <div className="name">{message.sender_name} </div>
+          </div>
         </Link>
        
       );
     });
 
   return (
-    <div>
+    <div className="messages_container">
+      <div className="messages">
         {messageBoxes}
+      </div>
         <button onClick={() => setSendMessage(prev => !prev)}>Send a Message</button>
         {sendMessage ? <SendMessage />: null}
     </div>

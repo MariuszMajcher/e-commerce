@@ -4,14 +4,21 @@
   text-align: center;
 }
 
+
+
 nav.main-nav {
   margin-bottom: 5rem;
-  position: relative;
+  position: absolute;
   top: 30px;
   right: 50px;
 
 }
 
+.main_container {
+  position: relative;
+  top: 20px;
+  height: 100%;
+}
 
 
 

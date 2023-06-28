@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import {Link } from 'react-router-dom'
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { loadBuy } from '../store/buyingCatSlice';
+import { selectUser } from '../store/userSlice';
 import '../styling/CatItem.css'
 
 
@@ -9,7 +10,14 @@ const CatItem = (props) => {
 
   let { name, price, gender, date_of_birth, id, user_id, images_path, breed_id, date_for_sale } = props.cat
 
+  const [owner, setOwner] = useState(false)
+
   const  dispatch = useDispatch()
+  const user = useSelector(selectUser)
+
+  useEffect(() => {
+    setOwner(user.id == user_id)
+  }, [])
   
   if (!images_path) {
     images_path = 'uploads/smoke.jpg'
@@ -65,7 +73,7 @@ const CatItem = (props) => {
       <h3>Age: {ageString} </h3>
       <h3>Placed on sale: {onSaleTimeString}</h3>
       <p>Description: {breed['description']}</p>
-      <Link to={`/cats-shop/${id}`} onClick={() => dispatch(loadBuy(props.cat))}> Buy Cat </Link>
+      {!owner && <Link to={`/cats-shop/${id}`} onClick={() => dispatch(loadBuy(props.cat))}> Buy Cat </Link>}
     </div>
   );
 };

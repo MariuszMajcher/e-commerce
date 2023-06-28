@@ -48,28 +48,30 @@ function App() {
   return (
     
       <BrowserRouter>
-        <nav className='main-nav'>
-          <Link to="/new-user">New User</Link>
-          <Link to="/login">Login</Link>
-          <Link to="/cats-shop">Cats Shop</Link>
-          <Link to="/sell-cat">Sell Cat</Link>
-          <Link to="/profile">Profile</Link>
-        </nav>
-        <Routes>
-          <Route path="/cat-breeds" element={<CatBreeds />} />
-          <Route path='/' element={<NewUser />} />
-          <Route path="/new-user" element={<NewUser />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/cats-shop" element={<CatShop />} />
-          <Route path="/sell-cat" element={<NewCatForSale />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/cats-shop/:id" element={<BuyCat />} />
-          <Route path="/messages" element={<Messages />} />
-          <Route path="/messages/:id" element={<Message />} />
-        </Routes>
-        {/* If not logged will not display */}
-          {logged && <Logout /> }
-        
+       
+          <nav className='main-nav'>
+            <Link to="/new-user">New User</Link>
+            <Link to="/login">Login</Link>
+            <Link to="/cats-shop">Cats Shop</Link>
+            <Link to="/sell-cat">Sell Cat</Link>
+            {logged && <Link to="/profile">Profile</Link>}
+          </nav>
+        <div className='main_container'>
+          <Routes>
+            <Route path="/cat-breeds" element={<CatBreeds />} />
+            <Route path='/' element={<NewUser />} />
+            <Route path="/new-user" element={<NewUser />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/cats-shop" element={<CatShop />} />
+            <Route path="/sell-cat" element={<NewCatForSale />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/cats-shop/:id" element={<BuyCat />} />
+            <Route path="/messages" element={<Messages />} />
+            <Route path="/messages/:id" element={<Message />} />
+          </Routes>
+          {/* If not logged will not display */}
+            {logged && <Logout /> }
+          </div>
       </BrowserRouter>
    
   );

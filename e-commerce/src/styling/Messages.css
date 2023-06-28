@@ -16,9 +16,10 @@
 }
 
 .message {
-    font-size: 0.7rem;
+    font-size: 0.9rem;
     display: flex;
     gap: 2rem;
+    border-bottom: solid 1px rgb(4, 164, 245);
 }
 
 .message:hover {
@@ -27,4 +28,12 @@
 
 button {
     width: 10rem;
+}
+
+.read {
+    color: rgb(97, 91, 64);
+}
+
+.unread {
+    color: rgb(4, 164, 245);
 }

@@ -136,6 +136,8 @@ const NewCatForSale = () => {
         if( data.message === 'You must be logged in to sell a cat') {
           navigate('/login')
           return false
+        } else {
+          navigate('/cats-shop')
         }}
       )
       .catch(err => 
@@ -171,7 +173,7 @@ const NewCatForSale = () => {
     }
   }
 
-
+  // does not redirect to a cat shop atm
   return (
     <div>
         <form onSubmit={onSubmit}>

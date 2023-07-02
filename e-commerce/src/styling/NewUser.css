@@ -1,7 +1,7 @@
 .new-user {
     width: 70vw;
     display: flex;
-    
+    align-items: center;
     
     
 }
@@ -15,15 +15,17 @@
     justify-content: center;
     margin-top: 10%;
     margin-bottom: 10%;
-    width: 100%;
+    width: 80%;
+    height: 20rem;
+    font-size: 1rem;
     font-family: 'Courier New', Courier, monospace;
 }
 
 
 
 .invalid {
-    font-size: 0.9rem;
-    color: rgb(190, 11, 80);
+    
+    color: var(--color-dark);
 }
 
 form {
@@ -39,7 +41,8 @@ form {
 }
 
 form input {
-    
+    background-color: rgb(169, 201, 238);
+    color: black;
     height: 1rem;
     margin-bottom: 2%;
     border-radius: 5px;

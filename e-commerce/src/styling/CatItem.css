@@ -1,26 +1,41 @@
 .cat-page {
     border: 1px solid #ccc;
     border-radius: 10px;
+    border: solid 2px var(--color-accent);
     padding: 20px;
-    background-color: rgb(255, 222, 179);
+    background-color: var(--color-secondary);
     width: 300px;
     margin: 10px;
     overflow: hidden;
     white-space:pre-wrap;
 }
 
+.cat-image {
+    border-radius: 10px;
+    border: solid 2px var(--color-red);
+}
+
+.buy-cat {
+    background-color: var(--color-dark);
+    color: white;
+    padding: 0.7rem 1rem;
+    border-radius: 5px;
+}
+
+.buy-cat:hover{
+    color: white;
+    background-color: var(--color-main);
+}
+
 h2 {
-    color: rgb(0, 33, 71);
     font-size: 1rem;
 
 }
 
 h3 {
-    color:rgb(16, 54, 97);
     font-size: 0.85rem;
 }
 
 p {
-    color:rgb(0, 33, 71);
     font-size: 0.7rem;
 }

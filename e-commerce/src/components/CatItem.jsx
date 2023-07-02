@@ -65,7 +65,7 @@ const CatItem = (props) => {
   
   return (
     <div className="cat-page" >
-      <div style={{backgroundImage: `url(../src/services/${images_path})`, backgroundSize: 'cover', height: "200px"}}></div>
+      <div className="cat-image" style={{backgroundImage: `url(../src/services/${images_path})`, backgroundSize: 'cover', height: "200px"}}></div>
       <h2>Name: {name}</h2>
       <h3>Breed: {breed['name']}</h3>
       <h3>Price: £ {priceString} </h3>
@@ -73,7 +73,7 @@ const CatItem = (props) => {
       <h3>Age: {ageString} </h3>
       <h3>Placed on sale: {onSaleTimeString}</h3>
       <p>Description: {breed['description']}</p>
-      {!owner && <Link to={`/cats-shop/${id}`} onClick={() => dispatch(loadBuy(props.cat))}> Buy Cat </Link>}
+      {!owner && <Link className="buy-cat"to={`/cats-shop/${id}`} onClick={() => dispatch(loadBuy(props.cat))}> Buy Cat </Link>}
     </div>
   );
 };

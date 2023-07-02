@@ -23,7 +23,8 @@ const Message = () => {
   const [catOwnerId, setCatOwnerId] = useState()
   const [isOwner, setIsOwner] = useState(false)
   const [payement, setPayement] = useState(false)
-
+ 
+ 
   const user = useSelector(selectUser)
   const { state } = useLocation()
   
@@ -32,12 +33,16 @@ const Message = () => {
 
   const openedMessage = useSelector(selectCurrentMessage)
 
+  
   if(state) {
     message = state.message
+ 
     dispatch(loadCurrentMessage(state.message))
   } else {
     message = openedMessage
+  
   }
+
 
   const agreed = message.sale_agreed
 

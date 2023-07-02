@@ -28,7 +28,7 @@ const Profile = () => {
 
   return (
     <div>
-      <h1>welcome {user.first_name}</h1>
+      <h1>Welcome {user.first_name} </h1>
       <Link to="/messages">Messages{!read && <span className="red-dot"></span>}</Link>
     </div>
   )

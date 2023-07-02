@@ -13,13 +13,14 @@
     justify-content: space-evenly;
     gap: 0.5rem;
     width: 20rem;
+    margin-bottom: 2rem;
 }
 
 .message {
     font-size: 0.9rem;
     display: flex;
     gap: 2rem;
-    border-bottom: solid 1px rgb(4, 164, 245);
+    border-bottom: solid 1px var(--color-dark);
 }
 
 .message:hover {
@@ -31,9 +32,9 @@ button {
 }
 
 .read {
-    color: rgb(97, 91, 64);
+    color: var(--color-dark);
 }
 
 .unread {
-    color: rgb(4, 164, 245);
+    color: var(--color-secondary);
 }

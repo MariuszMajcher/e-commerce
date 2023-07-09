@@ -1,21 +1,22 @@
 .new-user {
+    position: relative;
     width: 70vw;
     display: flex;
     align-items: center;
-    
+
+
     
 }
 
 /* will make it so when the height is not enough the elements will be next to each other */
 
 .password-validation {
-    position:relative;
+    position:absolute;
     display: grid;
+    top: 30%;
+    left: 0;
     align-items: center;
     justify-content: center;
-    margin-top: 10%;
-    margin-bottom: 10%;
-    width: 80%;
     height: 20rem;
     font-size: 1rem;
     font-family: 'Courier New', Courier, monospace;
@@ -41,10 +42,20 @@ form {
 }
 
 form input {
-    background-color: rgb(169, 201, 238);
+    background-color: rgba(238, 186, 118, 0.582);
     color: black;
     height: 1rem;
     margin-bottom: 2%;
     border-radius: 5px;
     padding: 1%;
+}
+
+.new-user > form {
+    background-color: var(--color-transparent);
+}
+
+@media screen and (max-width: 768px) {
+    .password-validation {
+        position: relative;
+    }
 }

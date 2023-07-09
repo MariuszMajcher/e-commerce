@@ -19,8 +19,7 @@ nav.main-nav {
 .main_container {
   position: relative;
   top: 20px;
-  height: 100%;
-  
+  width: auto;
 }
 
 
@@ -33,3 +32,8 @@ nav > a {
 
 }
 
+.logout-button {
+  position: fixed;
+  left: 2px;
+  top: 2px;
+}

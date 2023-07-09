@@ -23,9 +23,6 @@ const Messages = () => {
       month: 'long',
       day: 'numeric'
     };
-    
-    
-   
 
     const messageBoxes = messages.map((message) => {
       const new_date = new Date(message.date_of_message)

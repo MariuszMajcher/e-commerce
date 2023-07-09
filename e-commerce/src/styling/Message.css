@@ -1,11 +1,22 @@
 .message-container {
     border: 1px solid #ccc;
+    display: grid;
+    justify-items: center;
     border-radius: 5px;
     padding: 10px;
     margin: 10px;
-    background-color: #f4a261;
+    background-color: var(--color-transparent);
 
 }
+
+.message-text-container {
+    padding: 1rem;
+    margin: 1rem;
+    border-radius: 5px;
+    background-color: var(--color-accent);
+}
+
+
 
 .blurred {
     position: absolute;
@@ -20,12 +31,41 @@
 .buttons {
     
     display: grid;
+    height: 15rem;
+    padding-top: 2rem;
     gap: 15px;
-    background-color: rgb(211, 193, 145);
+    background-color: rgba(211, 193, 145, 0.301);
     border-radius: 10px;
     justify-content: center;
+    width: 15rem;
 }
 
 .stripe {
     background-color: red;
+}
+
+.sender h6:first-child{
+    color: var(--color-accent);
+}
+
+h6 {
+    line-height: 0.1rem;
+}
+
+.sender_container {
+    background-color: rgba(245, 245, 220, 0.178);
+    border-radius: 5px;
+    display: flex;
+    height: 5rem;
+    margin-top: 1rem;
+    justify-content: space-between;
+    align-items: flex-end;
+    width: 80%;
+    padding-inline: 1rem;
+}
+
+@media screen and (max-width: 768px) {
+    .message-container {
+        margin-top: 2rem;
+    }
 }

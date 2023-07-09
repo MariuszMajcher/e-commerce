@@ -43,7 +43,6 @@ const Message = () => {
   
   }
 
-
   const agreed = message.sale_agreed
 
   // This is just a fetch that loads the cats owner id, later it is used for the isOwner check
@@ -80,7 +79,6 @@ const Message = () => {
       })
       .then(res => res.json())
       .then(data => {
-        console.log(data)
         dispatch(loadAllMessages(data))}
         )
       .catch(err => console.log(err))
@@ -139,14 +137,22 @@ const Message = () => {
   }
 
 
-  // THE PAY BUTTON DISPLAYS PROPERLY
+  const options = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  };
+
+  const new_date = new Date(message.date_of_message)
+  const formattedDate = new_date.toLocaleDateString(undefined, options);
+
   return (
     <div className="message-container">
       <div className={payement ? "blurred": ""}></div>
+      <div className="message-text-container">
         <h1>{message.message}</h1>
-        <h2>{message.price}</h2>
-        <h3>{message.date}</h3>
-        <h3>{message.sender_name} {message.sender_surname}</h3>
+      </div>
+        
         <div className="buttons">
           <button onClick={() => {setSend(prev => !prev)}}>Write back</button>
           {send ? <form onSubmit={handleSubmit}>
@@ -164,6 +170,21 @@ const Message = () => {
             <Stripe className="stripe" message={message}/>
           </Elements>}
           <Link to='/messages'>Back</Link>
+          
+        </div>
+        <div className='sender_container'>
+          <div className="sender">
+            <h6>Sell price</h6>
+            <h6> £{message.asked_price}</h6>
+          </div>
+          <div className="sender">
+            <h6>Date of message</h6>
+            <h6> {formattedDate}</h6>
+          </div>
+          <div className="sender">
+            <h6>Sender</h6>
+            <h6> {message.sender_name} {message.sender_surname}</h6>
+          </div>
         </div>
     </div>
   )

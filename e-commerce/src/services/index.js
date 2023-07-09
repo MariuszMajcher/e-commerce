@@ -368,21 +368,19 @@ app.delete('/cats-shop/:id', (req, res) => {
 app.post('/api/create-payment-intent', async (req, res) => {
     const { amount, cat_id, cat_owner, buyer_id } = req.body;
     const date = new Date();
-    console.log(buyer_id)
     try {
       // Update the sold_date in the cats_for_sale table
       await pool.query('UPDATE cats_for_sale SET sold_date = $1 WHERE id = $2', [date, cat_id]);
-  
+      let paid = true
       let message;
       if (amount == 0) {
         message = 'Your cat has been successfully accepted to their new home. Thank you for your donation!';
       } else {
-        message = `Your cat has been successfully sold for $${amount}. Congratulations!`;
+        message = `Your cat has been successfully sold for £${amount}. Congratulations!`;
       }
   
       // Insert a new message into the messages table
-      await pool.query('INSERT INTO messages (sender_id, receiver_id, cat_id, message, date_of_message) VALUES ($1, $2, $3, $4, $5)', [buyer_id, cat_owner, cat_id, message, date]);
-  
+      await pool.query('INSERT INTO messages (sender_id, receiver_id, cat_id, message, date_of_message, paid, asked_price) VALUES ($1, $2, $3, $4, $5)', [buyer_id, cat_owner, cat_id, message, date, paid, amount]);
       // Create a PaymentIntent object
       const paymentIntent = await stripe.paymentIntents.create({
         amount: amount + 100,

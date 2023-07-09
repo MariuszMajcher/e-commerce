@@ -71,7 +71,7 @@ const Login = () => {
     }
 
   return (
-    <div>
+    <div className='login_container'>
       {userExists ? <h2>Sorry, that user already exists</h2> : null}
         <form onSubmit={handleSubmit}>
             <h2>Log in please</h2>

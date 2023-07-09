@@ -6,6 +6,7 @@
     background-color: var(--color-secondary);
     width: 300px;
     margin: 10px;
+    line-height: 1rem;
     overflow: hidden;
     white-space:pre-wrap;
 }

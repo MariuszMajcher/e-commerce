@@ -1,7 +1,10 @@
 .cat-shop {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    justify-content: center;
+    margin-top: 5%;
+    align-items: center;
+    justify-items: center;
+    background-color: var(--color-transparent);
     width: 80vw;
 }
 

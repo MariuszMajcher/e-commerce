@@ -1,3 +1,9 @@
+.login_container {
+    position: relative;
+    padding: 10rem;
+    background-color: var(--color-transparent);
+}
+
 .tries {
     color:red;
 }

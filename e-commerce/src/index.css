@@ -1,6 +1,6 @@
 :root {
   font-family: 'Caprasimo', cursive;
-  line-height: 1.5;
+  line-height: 0.1;
   letter-spacing: 0.05rem;
   font-weight: 400;
   --color-main: #f49d37;
@@ -8,6 +8,7 @@
   --color-secondary: #3f88c5;
   --color-accent: #d72638;
   --color-red: #f22b29;
+  --color-transparent: rgba(240, 248, 255, 0.048);
   color: var(--color-dark);
   color-scheme: light dark;
 
@@ -40,7 +41,7 @@ body {
 }
 
 h1 {
-  font-size: 3.2em;
+  font-size: 2.2em;
   line-height: 1.1;
 }
 

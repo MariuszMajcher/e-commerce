@@ -19,12 +19,12 @@ const Profile = () => {
       })
   }, [])
 
-  // somehow this every function does not work as inteded
+  
 
   const read = messages.every(element => {
-    element.message_read === true
+    return element.message_read === true
   });
-
+  
 
   return (
     <div>

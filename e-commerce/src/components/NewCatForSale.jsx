@@ -175,7 +175,7 @@ const NewCatForSale = () => {
 
   // does not redirect to a cat shop atm
   return (
-    <div>
+    <div className='sale_container'>
         <form onSubmit={onSubmit}>
           <input type="text" name="name" value={name} placeholder="Cats name" onChange={handleChange} required/>
           {/* AGE WILL BE SET BY CHECKING THE DOB */}
@@ -197,7 +197,7 @@ const NewCatForSale = () => {
             {imagePreview && <img src={imagePreview} alt="Selected Image Preview" />}
           </div>
           {!isCat && loaded && <div style={{ 'color': 'red'}}>The picture must be of a cat!</div>}
-          <input type="file" accept="image/*" onChange={handleFileInputChange} required/> 
+          <input className='input_image' type="file" accept="image/*" onChange={handleFileInputChange} required/> 
           <button type="submit" disabled={!goodToSell}> Sell Cat! </button>
       </form>
     </div>

@@ -146,6 +146,10 @@ const Message = () => {
   const new_date = new Date(message.date_of_message)
   const formattedDate = new_date.toLocaleDateString(undefined, options);
 
+  const handleQuit = () =>  {
+    setPayement(false)
+  }
+
   return (
     <div className="message-container">
       <div className={payement ? "blurred": ""}></div>
@@ -167,7 +171,7 @@ const Message = () => {
           {agreed && !isOwner &&  <button onClick={handlePay}>Pay</button>}
           {/* FOR STYLING PURPOSES AFTER CLICKING THE PAY BUTTON THE STRIPE FORM WILL COME OUT AND THE BACKGROUND WILL SLOWLY FADE AWAY */}
           {payement && <Elements stripe={stripePromise}>
-            <Stripe className="stripe" message={message}/>
+            <Stripe className="stripe" message={message} handleQuit={handleQuit}/>
           </Elements>}
           <Link to='/messages'>Back</Link>
           

@@ -1,8 +1,14 @@
 form.stripe{
-    position:relative;
+    position:absolute;
+    top: 2rem;
+    left: 15vw;
     z-index: 10;
-    background-color: rgb(155, 210, 219);
+    background-color: var(--color-main);
+    width: 50rem;
+    height: 30rem;
     display: grid;
+    justify-items: center;
+    box-shadow: 2px 15px 15px 15px black;
 }
 
 .card-element {

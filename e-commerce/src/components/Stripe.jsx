@@ -7,7 +7,7 @@ import '../styling/Stripe.css'
 // Will need to finish doing the gradual change upon the pay button pressed
 
 
-const StripePaymentForm = ({message}) => {
+const StripePaymentForm = ({message, handleQuit}) => {
   const stripe = useStripe();
   const elements = useElements();
   const [errorMessage, setErrorMessage] = useState('');
@@ -71,7 +71,7 @@ const StripePaymentForm = ({message}) => {
 
   return (
     <div>
-      <h1>Test Stripe Payment Form</h1>
+      
       <form className="stripe" onSubmit={handleSubmit}>
         <div className="form-group">
           <label htmlFor="card-element">Card Details</label>
@@ -80,6 +80,7 @@ const StripePaymentForm = ({message}) => {
         <button type="submit" disabled={!stripe}>
           Submit Payment
         </button>
+        <button onClick={handleQuit}>Cancel</button>
       </form>
       {errorMessage && <div className="error-message">{errorMessage}</div>}
     </div>

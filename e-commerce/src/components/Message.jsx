@@ -127,7 +127,7 @@ const Message = () => {
   .then(data => { 
     if(data.message === 'Message deleted sucessfuly') {
       dispatch(loadAllMessages(data.data))
-      navigate('/messages')
+      navigate('/profile')
   }})
   }
 

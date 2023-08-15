@@ -221,12 +221,6 @@ app.post('/sell-cat', upload.single('imageFile'), (req, res) => {
     });
 });
 
-
-
-// REALLY NEED TO MAKE CHANGES TO THE COLUMN NAMES, IT IS VERY CONFUSING NOW
-
-
-
 app.get('/messages/:id', (req, res) => {
     const { id } = req.params;
     pool.query('SELECT * FROM messages WHERE receiver_id = $1', [ id], (err, result) => {
@@ -376,11 +370,14 @@ app.post('/api/create-payment-intent', async (req, res) => {
       if (amount == 0) {
         message = 'Your cat has been successfully accepted to their new home. Thank you for your donation!';
       } else {
-        message = `Your cat has been successfully sold for £${amount}. Congratulations!`;
+        message = `Your cat has been successfully sold for £${amount/100}. Congratulations!`;
       }
+     
+      const buyerQuery = await pool.query('SELECT * FROM users WHERE id = $1', [buyer_id])
+      const {first_name, last_name, email} = buyerQuery.rows[0]
   
       // Insert a new message into the messages table
-      await pool.query('INSERT INTO messages (sender_id, receiver_id, cat_id, message, date_of_message, paid, asked_price) VALUES ($1, $2, $3, $4, $5)', [buyer_id, cat_owner, cat_id, message, date, paid, amount]);
+      await pool.query('INSERT INTO messages (sender_id, sender_name, sender_surname, sender_email, receiver_id, cat_id, message, date_of_message, paid, asked_price) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)', [buyer_id, first_name, last_name, email, cat_owner,  cat_id, message, date, paid, amount]);
       // Create a PaymentIntent object
       const paymentIntent = await stripe.paymentIntents.create({
         amount: amount + 100,

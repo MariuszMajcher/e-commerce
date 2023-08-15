@@ -70,6 +70,20 @@ const Login = () => {
     }
     }
 
+  const handleGmailLogin = () => {
+    `http://localhost:3000/login/gmail`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: {
+
+            }
+    }
+    // SOME BEAUTIFULL DAY WILL ADD TO IT A GMAIL LOGIN USING PASSPORT
+  }
+
   return (
     <div className='login_container'>
       {userExists ? <h2>Sorry, that user already exists</h2> : null}
@@ -90,6 +104,7 @@ const Login = () => {
             placeholder="Your password" />
             <button type="submit">Submit</button>
         </form>
+        <div className='gmail_login' onClick={handleGmailLogin}></div>
     </div>
   )
 }

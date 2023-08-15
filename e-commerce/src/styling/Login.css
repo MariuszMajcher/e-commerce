@@ -1,9 +1,23 @@
 .login_container {
     position: relative;
+    display: grid;
+    justify-items: center;
+    gap: 5rem;
     padding: 10rem;
     background-color: var(--color-transparent);
 }
 
 .tries {
     color:red;
+}
+
+.gmail_login {
+    background-image: url('../../public/images/Gmail-logo.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    border-radius: 15px;
+    width: 5rem;
+    height: 5rem;
+    background-color: white;
 }

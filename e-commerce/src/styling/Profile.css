@@ -1,3 +1,15 @@
+.profile_container {
+  display: grid;
+  height: 80vh;
+  width: 90vw;
+  background-color: blue;
+}
+
+.greeting {
+  padding: 2rem;
+  justify-self: start;
+}
+
 .red-dot {
     display: inline-block;
     width: 8px;
